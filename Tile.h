@@ -12,14 +12,19 @@ constexpr int TILE = 32;
 class Tile
 {
 public:
-	int ox, oy;
-	int cx, cy, dx, dy;	// Collisions: x, y, delta x, delta y
+	/// <summary>
+	/// Terrain types
+	/// </summary>
 	enum class Terrains_t {
 		Snow,
 		Ice,
 		Gravel,
 		CobbleStone
 	};
+
+	/// <summary>
+	/// Object types
+	/// </summary>
 	enum class Objects_t {
 		None,
 		Tree,
@@ -36,20 +41,37 @@ public:
 		Flag
 	};
 
+	/// <summary>
+	/// Use tile factory. (Uses terrain and object)
+	/// </summary>
+	/// <param name="ox">- Object X from tilemap</param>
+	/// <param name="oy">- Object Y from tilemap</param>
+	/// <param name="cx">- Collision center X</param>
+	/// <param name="cy">- Collision bottom Y</param>
+	/// <param name="dx">- Collision delta X</param>
+	/// <param name="dy">- Collision delta Y</param>
+	/// <param name="object">- Object</param>
+	/// <param name="terrain">- Terrain</param>
+	Tile(int ox, int oy, int cx, int cy, int dx, int dy, Objects_t object, Terrains_t terrain, int tile_width=TILE, int tile_height=TILE);
+
+	int ox, oy;
+	int cx, cy, dx, dy;	// Collisions: x, y, delta x, delta y
+
 	static map<Terrains_t, pair<int, int>> terrains;
 
 	Terrains_t terrain;
 	Objects_t object;
 
-protected:
+private:
 	static Surface tiles;
 	static int t_width;	// tilemap width
+	int tile_width, tile_height;
 
 public:
-	virtual void Draw(int x, int y, Surface& screen);
-	virtual void DrawObjectOnly(int x, int y, Surface& screen);
+	void Draw(int x, int y, Surface& screen);
+	void DrawObjectOnly(int x, int y, Surface& screen);
 
-protected:
-	virtual void DrawTile(int tx, int ty, Surface& screen, int x, int y);
+private:
+	void DrawTile(int tx, int ty, Surface& screen, int x, int y, bool is_object=false);
 };
 

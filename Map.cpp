@@ -22,9 +22,8 @@ Map::~Map()
 
 void Map::DeleteRow()
 {
-	vector<Tile*>& row = map.at(0);
+	vector<Tile>& row = map.at(0);
 	while (!row.empty()) {
-		delete row.back();
 		row.pop_back();
 	}
 	map.erase(map.begin());

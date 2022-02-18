@@ -13,7 +13,7 @@ OffroadMap::OffroadMap(int rows, int colls, Difficulty difficulty, Surface& scre
 
 void OffroadMap::AddRow(bool empty)
 {
-	vector<Tile*> row;
+	vector<Tile> row;
 	// Left border
 	for (int i = 0; i < border_width; i++)
 		row.push_back(tileFactory->getTile(Tile::Terrains_t::Snow, Tile::Objects_t::TwoTrees));
@@ -33,7 +33,7 @@ void OffroadMap::AddRow(bool empty)
 	map.push_back(row);
 }
 
-Tile* OffroadMap::GenerateTile(int column) {
+Tile OffroadMap::GenerateTile(int column) {
 	Tile::Terrains_t terrain = Tile::Terrains_t::Snow;
 	Tile::Objects_t object = GetRandomObject();
 
@@ -41,18 +41,16 @@ Tile* OffroadMap::GenerateTile(int column) {
 	size_t map_size = map.size();
 	Tile* tmp;
 	if (map_size > 0 && object == Tile::Objects_t::Tree) {
-		Tile::Objects_t above = map.at(map_size - 1).at(column)->object;
+		Tile::Objects_t above = map[map_size - 1][column].object;
 		switch (above)
 		{
 		case Tile::Objects_t::Tree:
-			tmp = map.at(map_size - 1).at(column);
-			map.at(map_size - 1).at(column) = tileFactory->getTile(tmp->terrain, Tile::Objects_t::TwoTrees);
-			delete tmp;
+			tmp = &map[map_size - 1][column];
+			map[map_size - 1][column] = tileFactory->getTile(tmp->terrain, Tile::Objects_t::TwoTrees);
 			break;
 		default:
-			tmp = map.at(map_size - 1).at(column);
+			tmp = &map[map_size - 1][column];
 			map.at(map_size - 1).at(column) = tileFactory->getTile(tmp->terrain, Tile::Objects_t::TopOfTree);
-			delete tmp;
 			break;
 		}
 	}
@@ -125,10 +123,10 @@ bool OffroadMap::CheckPos(int x, int y)
 {
 	int tx = x / TILE;
 	int ty = y / TILE;
-	Tile* tile = map.at(ty).at(tx);
+	Tile tile = map[ty][tx];
 
-	if (tile->object == Tile::Objects_t::None) return true;
-	return x % TILE > tile->cx + tile->dx || y % TILE > tile->cy || y % TILE < tile->cy - tile->dy;
+	if (tile.object == Tile::Objects_t::None) return true;
+	return x % TILE > tile.cx + tile.dx || y % TILE > tile.cy || y % TILE < tile.cy - tile.dy;
 }
 
 void OffroadMap::Draw()
@@ -138,7 +136,7 @@ void OffroadMap::Draw()
 		int col = 0;
 		for (auto tile : row) {
 			int x = screen.GetWidth() / 2 - (colls / 2 - col + border_width) * TILE;
-			tile->Draw(x, r * TILE - current_position, screen);
+			tile.Draw(x, r * TILE - current_position, screen);
 			col++;
 		}
 		r++;
@@ -159,23 +157,23 @@ void OffroadMap::DrawPlayer()
 	int tx = (player->x - x) / TILE;
 	int ty = (player->y + current_position) / TILE;
 
-	Tile* tile = map[ty][tx];
+	Tile* tile = &map[ty][tx];
 	Tile::Objects_t None = Tile::Objects_t::None;
 
 	if ((tile->object == Tile::Objects_t::TopOfTree && current_position < TILE / 2 + 8)
 		|| tile->object == Tile::Objects_t::TwoTrees)
 		tile->DrawObjectOnly(x + tx * TILE, y, screen);
 
-	tile = map.at(ty).at(tx + 1);
+	tile = &map[ty][tx + 1];
 	if ((tile->object == Tile::Objects_t::TopOfTree && current_position < TILE / 2 + 8)
 		|| tile->object == Tile::Objects_t::TwoTrees)
 		tile->DrawObjectOnly(x + (tx + 1) * TILE, y, screen);
 
-	tile = map.at(ty + 1).at(tx);
+	tile = &map[ty + 1][tx];
 	if (tile->object != None)
 		tile->DrawObjectOnly(x + tx * TILE, y + TILE, screen);
 
-	tile = map.at(ty + 1).at(tx + 1);
+	tile = &map[ty + 1][tx + 1];
 	if (tile->object != None)
 		tile->DrawObjectOnly(x + (tx + 1) * TILE, y + TILE, screen);
 }

@@ -222,44 +222,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Bush.cpp" />
-    <ClCompile Include="Flag.cpp" />
     <ClCompile Include="game.cpp" />
-    <ClCompile Include="Log.cpp" />
     <ClCompile Include="Map.cpp" />
-    <ClCompile Include="None.cpp" />
     <ClCompile Include="NormalMap.cpp" />
     <ClCompile Include="OffroadMap.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="Rock.cpp" />
-    <ClCompile Include="Sign.cpp" />
     <ClCompile Include="surface.cpp" />
     <ClCompile Include="template.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="TileFactory.cpp" />
-    <ClCompile Include="TopOfTree.cpp" />
-    <ClCompile Include="Tree.cpp" />
-    <ClCompile Include="TwoTrees.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Bush.h" />
-    <ClInclude Include="Flag.h" />
     <ClInclude Include="game.h" />
-    <ClInclude Include="Log.h" />
     <ClInclude Include="Map.h" />
-    <ClInclude Include="None.h" />
     <ClInclude Include="NormalMap.h" />
     <ClInclude Include="OffroadMap.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="Rock.h" />
-    <ClInclude Include="Sign.h" />
     <ClInclude Include="surface.h" />
     <ClInclude Include="template.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="TileFactory.h" />
-    <ClInclude Include="TopOfTree.h" />
-    <ClInclude Include="Tree.h" />
-    <ClInclude Include="TwoTrees.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="_readme.txt" />

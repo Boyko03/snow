@@ -12,7 +12,7 @@ public:
 	void Draw() override;
 
 private:
-	Tile* GenerateTile(int column);
+	Tile GenerateTile(int column);
 	Tile::Objects_t GetRandomObject();
 
 	bool CheckPos(int x, int y);

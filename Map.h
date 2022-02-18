@@ -16,7 +16,7 @@ public:
 	};
 
 protected:
-	vector<vector<Tile*>> map;
+	vector<vector<Tile>> map;
 	int rows;
 	int colls;
 	int border_width = 3;

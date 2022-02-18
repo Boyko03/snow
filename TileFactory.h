@@ -4,6 +4,6 @@
 class TileFactory
 {
 public:
-	Tile* getTile(Tile::Terrains_t terrain, Tile::Objects_t object);
+	Tile getTile(Tile::Terrains_t terrain, Tile::Objects_t object);
 };
 
