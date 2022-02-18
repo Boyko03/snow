@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="game.cpp" />
+    <ClCompile Include="surface.cpp">
+      <Filter>template code</Filter>
+    </ClCompile>
+    <ClCompile Include="template.cpp">
+      <Filter>template code</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Tile.cpp">
+      <Filter>tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Bush.cpp">
+      <Filter>tiles\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Log.cpp">
+      <Filter>tiles\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Rock.cpp">
+      <Filter>tiles\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Tree.cpp">
+      <Filter>tiles\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="TwoTrees.cpp">
+      <Filter>tiles\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="TopOfTree.cpp">
+      <Filter>tiles\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="TileFactory.cpp">
+      <Filter>tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Sign.cpp">
+      <Filter>tiles\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="None.cpp">
+      <Filter>tiles\objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Map.cpp">
+      <Filter>map</Filter>
+    </ClCompile>
+    <ClCompile Include="NormalMap.cpp">
+      <Filter>map</Filter>
+    </ClCompile>
+    <ClCompile Include="OffroadMap.cpp">
+      <Filter>map</Filter>
+    </ClCompile>
+    <ClCompile Include="Flag.cpp">
+      <Filter>tiles\objects</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="game.h" />
+    <ClInclude Include="surface.h">
+      <Filter>template code</Filter>
+    </ClInclude>
+    <ClInclude Include="template.h">
+      <Filter>template code</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="Tile.h">
+      <Filter>tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="Bush.h">
+      <Filter>tiles\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Log.h">
+      <Filter>tiles\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Rock.h">
+      <Filter>tiles\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Tree.h">
+      <Filter>tiles\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="TwoTrees.h">
+      <Filter>tiles\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="TopOfTree.h">
+      <Filter>tiles\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="TileFactory.h">
+      <Filter>tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="Sign.h">
+      <Filter>tiles\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="None.h">
+      <Filter>tiles\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Map.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="NormalMap.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="OffroadMap.h">
+      <Filter>map</Filter>
+    </ClInclude>
+    <ClInclude Include="Flag.h">
+      <Filter>tiles\objects</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="template code">
+      <UniqueIdentifier>{bf32dd6e-4be7-4889-8ac6-49e7ee163c40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tiles">
+      <UniqueIdentifier>{e8529b94-9922-4bad-9065-3989d7d89af0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tiles\objects">
+      <UniqueIdentifier>{44262ec5-b436-4ed6-a37d-a57780997a87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tiles\terrains">
+      <UniqueIdentifier>{452705e1-d350-4595-82b4-ce1c674c8480}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="map">
+      <UniqueIdentifier>{c492300b-f947-4d4a-af79-30b2b854a37f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="_readme.txt">
+      <Filter>template code</Filter>
+    </Text>
+  </ItemGroup>
+</Project>

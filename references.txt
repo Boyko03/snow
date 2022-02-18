@@ -1,0 +1,2 @@
+tileset 		- https://stealthix.itch.io/rpg-nature-tileset
+skier, scoreboard 	- http://floriangrosse.com/portfolio/dwarf-ski/
