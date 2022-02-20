@@ -10,15 +10,15 @@ NormalMap::NormalMap(int rows, int colls, Difficulty difficulty, Surface& screen
 	{
 	case Map::Difficulty::Easy:
 		DISTANCE = 7;
-		flags_counter = 15 * DISTANCE + 1;
+		flags_counter = 15 * DISTANCE + 2;
 		break;
 	case Map::Difficulty::Medium:
 		DISTANCE = 6;
-		flags_counter = 25 * DISTANCE + 1;
+		flags_counter = 25 * DISTANCE + 2;
 		break;
 	case Map::Difficulty::Hard:
 		DISTANCE = 5;
-		flags_counter = 30 * DISTANCE + 1;
+		flags_counter = 35 * DISTANCE + 2;
 		break;
 	default:
 		break;
