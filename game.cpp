@@ -8,7 +8,7 @@
 
 namespace Tmpl8
 {
-	static Surface home_screen = Surface("assets/home-screen2.png");
+	static Surface home_screen = Surface("assets/home-screen.png");
 	static Surface level_mode = Surface("assets/level-mode.png");
 	static Surface level_difficulty_normal = Surface("assets/level-difficulty.png");
 	static Surface level_difficulty_offroad = Surface("assets/level-difficulty-off.png");
