@@ -5,13 +5,6 @@ using namespace Tmpl8;
 
 class Player
 {
-	enum class Direction {
-		Left = -1,
-		Normal = 0,
-		Right = 1
-	} direction = Direction::Normal;
-	static Sprite player;
-	static Sprite copy;
 public:
 	float x;
 	float y;
@@ -29,5 +22,16 @@ public:
 	void NormalPosition();
 	void Draw(Surface& screen);
 	void Blink(int timer);
+
+private:
+	enum class Direction {
+		Left = -1,
+		Normal = 0,
+		Right = 1
+	} direction = Direction::Normal;
+	static Sprite player;
+	static Sprite copy;
+
+	int acceleration_counter = 0;
 };
 

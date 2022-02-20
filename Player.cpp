@@ -35,26 +35,26 @@ void Player::SlowDown()
 
 void Player::Accelerate()
 {
-	static int counter = 0;
-	if (counter % 5 == 0) {
-		switch (counter / 5)
+	if (acceleration_counter % 5 == 0) {
+		switch (acceleration_counter / 5)
 		{
 		case 1: case 3: player.SetFrame(1); break;
 		case 2: player.SetFrame(2); break;
 		default:
 			player.SetFrame(0);
-			counter = 0;
-			speed += 0.2f;
+			if (acceleration_counter != 0) speed += 0.2f;
+			acceleration_counter = 0;
 			break;
 		}
 	}
-	counter++;
+	acceleration_counter++;
 	direction = Direction::Normal;
 }
 
 void Player::NormalPosition()
 {
 	player.SetFrame(2);
+	acceleration_counter = 0;
 	direction = Direction::Normal;
 }
 
