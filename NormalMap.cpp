@@ -4,20 +4,27 @@
 NormalMap::NormalMap(int rows, int colls, Difficulty difficulty, Surface& screen) :
 	Map(rows, colls, difficulty, screen)
 {
+	player = new Player(((colls + border_width) / 3 + 2) * TILE, 4 * TILE);
+
 	switch (difficulty)
 	{
 	case Map::Difficulty::Easy:
-		flags_counter = 15 * DISTANCE;
+		DISTANCE = 7;
+		flags_counter = 15 * DISTANCE + 1;
 		break;
 	case Map::Difficulty::Medium:
-		flags_counter = 25 * DISTANCE;
+		DISTANCE = 6;
+		flags_counter = 25 * DISTANCE + 1;
 		break;
 	case Map::Difficulty::Hard:
-		flags_counter = 50 * DISTANCE;
+		DISTANCE = 5;
+		flags_counter = 30 * DISTANCE + 1;
 		break;
 	default:
 		break;
 	}
+
+	max_flags_shown_per_frame = screen.GetHeight() / TILE / DISTANCE;
 
 	// empty rows at spawn point
 	for (int i = 0; i < rows / 3; i++)
@@ -37,30 +44,40 @@ void NormalMap::AddRow(bool empty)
 	if (empty)
 		for (int i = 0; i < colls; i++)
 			row.push_back(tileFactory->getTile(Tile::Terrains_t::Snow, Tile::Objects_t::None));
-	else
+	else {
 		for (int i = 0; i < colls; i++) {
-			if (flags_counter >= 0 && flags_counter % DISTANCE == 0) {
-				if (i == colls / 3 + 2 && flags_counter & 1)
-					row.push_back(tileFactory->getTile(Tile::Terrains_t::Snow, Tile::Objects_t::Flag));
-				else if (i == 2 * colls / 3 - 2 && flags_counter % (2 * DISTANCE) == 0)
-					row.push_back(tileFactory->getTile(Tile::Terrains_t::Snow, Tile::Objects_t::Flag));
+			if (flags_counter > 0 && flags_counter % DISTANCE == 0) {
+				if (i == 2 * colls / 3 - 2 && flags_counter % (2 * DISTANCE) == 0/*i == colls / 3 + 2 && flags_counter & 1*/)
+					row.push_back(tileFactory->getTile(Tile::Terrains_t::Snow, Tile::Objects_t::RedFlag));
+				else if (i == colls / 3 + 2 && flags_counter % (2 * DISTANCE) != 0/*i == 2 * colls / 3 - 2 && flags_counter % (2 * DISTANCE) == 0*/)
+					row.push_back(tileFactory->getTile(Tile::Terrains_t::Snow, Tile::Objects_t::BlueFlag));
 				else
 					row.push_back(tileFactory->getTile(Tile::Terrains_t::Snow, Tile::Objects_t::None));
 			}
+			else if (flags_counter % DISTANCE == 0 && !finish_drawn)
+				row.push_back(tileFactory->getTile(Tile::Terrains_t::FinishLine, Tile::Objects_t::None));
 			else
 				row.push_back(tileFactory->getTile(Tile::Terrains_t::Snow, Tile::Objects_t::None));
 		}
+
+		flags_counter--;
+	}
 
 	// Right border
 	for (int i = 0; i < border_width; i++)
 		row.push_back(tileFactory->getTile(Tile::Terrains_t::Snow, Tile::Objects_t::TwoTrees));
 
+	// Check for finish
+	if (!finish_drawn && flags_counter < 0 && flags_counter % DISTANCE == 0)
+		finish_drawn = true;
+
 	map.push_back(row);
-	flags_counter--;
 }
 
-void NormalMap::Move()
+void NormalMap::Move(float deltaTime)
 {
+	total_time += deltaTime;
+
 	if ((current_position += player->speed) >= TILE) {
 		current_position -= TILE;
 		DeleteRow();
@@ -89,30 +106,43 @@ void NormalMap::Move()
 	if (player->is_hit && --timer <= -1) player->is_hit = false;
 
 	// Check if misses flag
-	if ((flags_counter + 1) % DISTANCE == 0 && py % TILE < 16) {
+	if (py % TILE < 16 && !CheckFlag(px, py)) {
 		if (!missed_flag) {
-			bool left_flag = (flags_counter + 1) & 1 && (player->x - 2 * TILE) / TILE > colls / 3 + 2;
-			bool right_flag = (flags_counter + 1) % (2 * DISTANCE) == 0 && (player->x + TILE) / TILE < 2 * colls / 3 + 2;
-
-			if (left_flag || right_flag) {
-				player->score = max(player->score - DISTANCE, 0);
-				missed_flag = true;
-			}
+			// player->score = max(player->score - DISTANCE, 0);
+			total_time += 10000; // + 10 000 milliseconds
+			missed_flag = true;
 		}
 	}
 	else
 		missed_flag = false;
-
 }
 
 bool NormalMap::CheckPos(int x, int y)
 {
 	int tx = x / TILE;
 	int ty = y / TILE;
-	Tile tile = map.at(ty).at(tx);
+	Tile tile = map[ty][tx];
 
 	if (tile.object == Tile::Objects_t::None) return true;
 	return x % TILE > tile.cx + tile.dx || y % TILE > tile.cy || y % TILE < tile.cy - tile.dy;
+}
+
+bool NormalMap::CheckFlag(int x, int y)
+{
+	int tx = x / TILE;
+	int ty = y / TILE;
+
+	int i = 0;
+	for (auto& tile : map[ty]) {
+		if (tile.object == Tile::Objects_t::BlueFlag) {
+			return tx < i;
+		}
+		else if (tile.object == Tile::Objects_t::RedFlag) {
+			return tx >= i && CheckPos(x, y);
+		}
+		i++;
+	}
+	return true;
 }
 
 void NormalMap::Draw()
@@ -130,7 +160,7 @@ void NormalMap::Draw()
 
 	DrawPlayer();
 	DrawHearts();
-	PrintScore();
+	PrintTime();
 }
 
 void NormalMap::DrawPlayer()
@@ -146,7 +176,7 @@ void NormalMap::DrawPlayer()
 	Tile* tile = &map[ty][tx];
 	Tile::Objects_t None = Tile::Objects_t::None;
 
-	tile = &map.at(ty + 1).at(tx);
+	tile = &map[ty + 1][tx];
 	if (tile->object != None)
 		tile->DrawObjectOnly(x + tx * TILE, y, screen);
 
@@ -165,5 +195,28 @@ void NormalMap::DrawPlayer()
 
 bool NormalMap::IsWin()
 {
-	return flags_counter < -25;
+	return flags_counter < -max_flags_shown_per_frame * DISTANCE - DISTANCE / 2;
+}
+
+void NormalMap::PrintTime()
+{
+	Sprite scoreboard = Sprite(new Surface("assets/timeboard.png"), 1);
+	scoreboard.Draw(&screen, 535, 0);
+	char* buff = GetTotalTime();
+	int width = 3;
+	int x = (scoreboard.GetWidth() - (int)strlen(buff) * 6 * width) / 2;
+	screen.Print(buff, 540 + x, 45, 0xffe8cd57, width);
+	delete buff;
+}
+
+char* NormalMap::GetTotalTime()
+{
+	char* buff = new char[16];
+
+	int minutes = (int)total_time / 60000;
+	int seconds = (int)total_time % 60000 / 1000;
+	int millis = (int)total_time % 1000 / 10;
+	sprintf(buff, "%02d:%02d:%02d", minutes, seconds, millis);
+
+	return buff;
 }

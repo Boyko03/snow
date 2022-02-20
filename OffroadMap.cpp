@@ -4,6 +4,8 @@
 OffroadMap::OffroadMap(int rows, int colls, Difficulty difficulty, Surface& screen) :
 	Map(rows, colls, difficulty, screen)
 {
+	player = new Player(screen.GetWidth() / 2, 4 * TILE);
+
 	// empty rows at spawn point
 	for (int i = 0; i < rows / 2; i++)
 		AddRow(true);
@@ -50,7 +52,7 @@ Tile OffroadMap::GenerateTile(int column) {
 			break;
 		default:
 			tmp = &map[map_size - 1][column];
-			map.at(map_size - 1).at(column) = tileFactory->getTile(tmp->terrain, Tile::Objects_t::TopOfTree);
+			map[map_size - 1][column] = tileFactory->getTile(tmp->terrain, Tile::Objects_t::TopOfTree);
 			break;
 		}
 	}
@@ -89,7 +91,7 @@ Tile::Objects_t OffroadMap::GetRandomObject() {
 	return Tile::Objects_t(index);
 }
 
-void OffroadMap::Move()
+void OffroadMap::Move(float deltaTime)
 {
 	if ((current_position += player->speed) >= TILE) {
 		current_position -= TILE;
@@ -176,4 +178,15 @@ void OffroadMap::DrawPlayer()
 	tile = &map[ty + 1][tx + 1];
 	if (tile->object != None)
 		tile->DrawObjectOnly(x + (tx + 1) * TILE, y + TILE, screen);
+}
+
+void OffroadMap::PrintScore()
+{
+	Sprite scoreboard = Sprite(new Surface("assets/score.png"), 1);
+	scoreboard.Draw(&screen, 560, 0);
+	char buff[8];
+	sprintf(buff, "%03d", player->score);
+	int width = 3;
+	int x = (scoreboard.GetWidth() - (int)strlen(buff) * 6 * width) / 2;
+	screen.Print(buff, 565 + x, 45, 0xffe8cd57, width);
 }

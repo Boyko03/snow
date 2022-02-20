@@ -7,6 +7,7 @@ int Tile::t_width = tiles.GetWidth();
 
 map<Tile::Terrains_t, pair<int, int>> Tile::terrains {
         {Terrains_t::Snow, pair<int, int>(0, 2)},
+        {Terrains_t::FinishLine, pair<int, int>(4, 2)},
         {Terrains_t::Ice, pair<int, int>(1, 2)},
         {Terrains_t::Gravel, pair<int, int>(2, 2)},
         {Terrains_t::CobbleStone, pair<int, int>(3, 2)},

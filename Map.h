@@ -33,7 +33,7 @@ public:
 	virtual void AddRow(bool empty = false) = 0;
 	void DeleteRow();
 
-	virtual void Move() = 0;
+	virtual void Move(float deltaTime) = 0;
 
 	virtual void Draw() = 0;
 
@@ -43,6 +43,5 @@ public:
 
 protected:
 	void DrawHearts();
-	void PrintScore();
 };
 

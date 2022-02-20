@@ -3,7 +3,8 @@
 
 Tile TileFactory::getTile(Tile::Terrains_t terrain, Tile::Objects_t object)
 {
-	// Tile(int ox, int oy, int cx, int cy, int dx, int dy, Objects_t object);
+	// Tile(int ox, int oy, int cx, int cy, int dx, int dy, Objects_t object,
+	//		Terrains_t terrain, int tile_width=TILE, int tile_height=TILE);
 	switch (object)
 	{
 	case Tile::Objects_t::Tree:
@@ -22,7 +23,9 @@ Tile TileFactory::getTile(Tile::Terrains_t terrain, Tile::Objects_t object)
 		return Tile(2, 0, TILE / 2, 25, 10, 7, object, terrain);
 	case Tile::Objects_t::None:
 		return Tile(0, 1, TILE / 2, 25, 4, 7, object, terrain);
-	case Tile::Objects_t::Flag:
+	case Tile::Objects_t::BlueFlag:
 		return Tile(4, 0, TILE / 2, 20, 6, 16, object, terrain, TILE, 2 * TILE);
+	case Tile::Objects_t::RedFlag:
+		return Tile(7, 0, TILE / 2, 20, 6, 16, object, terrain, TILE, 2 * TILE);
 	}
 }

@@ -8,7 +8,7 @@ public:
 
 	void AddRow(bool empty = false) override;
 
-	void Move() override;
+	void Move(float deltaTime) override;
 	void Draw() override;
 
 private:
@@ -18,4 +18,5 @@ private:
 	bool CheckPos(int x, int y);
 
 	void DrawPlayer();
+	void PrintScore();
 };

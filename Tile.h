@@ -17,6 +17,7 @@ public:
 	/// </summary>
 	enum class Terrains_t {
 		Snow,
+		FinishLine,
 		Ice,
 		Gravel,
 		CobbleStone
@@ -38,7 +39,8 @@ public:
 		TwoTrees,
 
 		// Normal map
-		Flag
+		BlueFlag,
+		RedFlag
 	};
 
 	/// <summary>
@@ -52,6 +54,8 @@ public:
 	/// <param name="dy">- Collision delta Y</param>
 	/// <param name="object">- Object</param>
 	/// <param name="terrain">- Terrain</param>
+	/// <param name="tile_width">- tile width, default: TILE</param>
+	/// <param name="tile_height">- tile height, default: TILE</param>
 	Tile(int ox, int oy, int cx, int cy, int dx, int dy, Objects_t object, Terrains_t terrain, int tile_width=TILE, int tile_height=TILE);
 
 	int ox, oy;

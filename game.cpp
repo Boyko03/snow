@@ -62,7 +62,7 @@ namespace Tmpl8
 			}
 			player = map->GetPlayer();
 			screen->Clear(0);
-			map->Move();
+			map->Move(deltaTime);
 			map->Draw();
 			if (player->health == 0) {
 				state = STATE::GAME_OVER;
@@ -71,25 +71,14 @@ namespace Tmpl8
 				state = STATE::WIN;
 			break;
 		case STATE::GAME_OVER:
-			for (int i = 2 * TILE; i < screen->GetHeight() - 2 * TILE; i++)
-				for (int j = 2 * TILE; j < screen->GetWidth() - 2 * TILE; j++)
-					screen->GetBuffer()[i * screen->GetWidth() + j] = game_over.GetBuffer()[i * screen->GetWidth() + j];
-			char buff[16];
-			sprintf(buff, "Score: %d", player->score);
-			screen->Print(buff, 300, 220, 0x00ff00, 4);
+			PrintScore(game_over);
 			break;
 		case STATE::WIN:
-			for (int i = 2 * TILE; i < screen->GetHeight() - 2 * TILE; i++)
-				for (int j = 2 * TILE; j < screen->GetWidth() - 2 * TILE; j++)
-					screen->GetBuffer()[i * screen->GetWidth() + j] = winner.GetBuffer()[i * screen->GetWidth() + j];
-			char win_buff[16];
-			sprintf(win_buff, "Score: %d", player->score);
-			screen->Print(win_buff, 300, 220, 0x00ff00, 4);
+			PrintScore(winner);
 			break;
 		default:
 			break;
 		}
-		// screen->Print("hello 123", 2, 2, 0xff0000, 2);
 	}
 
 	void Game::MouseUp(int button)
@@ -247,5 +236,25 @@ namespace Tmpl8
 	bool Game::IsBackClicked()
 	{
 		return mx > 21 && mx < 100 && my > 21 && my < 100;
+	}
+
+	void Game::PrintScore(Surface& buff)
+	{
+		for (int i = 2 * TILE; i < screen->GetHeight() - 2 * TILE; i++)
+			for (int j = 2 * TILE; j < screen->GetWidth() - 2 * TILE; j++)
+				screen->GetBuffer()[i * screen->GetWidth() + j] = buff.GetBuffer()[i * screen->GetWidth() + j];
+
+		if (mode == Mode::OffRoad) {
+			char win_buff[16];
+			sprintf(win_buff, "Score: %d", player->score);
+			screen->Centre(win_buff, 220, 0x00ff00, 4);
+		}
+		else if (mode == Mode::Normal) {
+			char* tmp = dynamic_cast<NormalMap*>(map)->GetTotalTime();
+			char time_buff[24];
+			sprintf(time_buff, "Time: %s", tmp);
+			screen->Centre(time_buff, 220, 0x00ff00, 4);
+			delete tmp;
+		}
 	}
 };

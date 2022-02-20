@@ -48,6 +48,8 @@ private:
 	void LevelDifficultyHandler();
 	void EndgameHandler();
 	bool IsBackClicked();
+	// Prints score during endgame state
+	void PrintScore(Surface& buff);
 };
 
 }; // namespace Tmpl8
