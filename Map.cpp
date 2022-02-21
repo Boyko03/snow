@@ -5,15 +5,10 @@
 using namespace Tmpl8;
 
 Map::Map(int rows, int colls, Difficulty difficulty, Surface& screen) : rows(rows), colls(colls),
-	difficulty(difficulty), screen(screen)
-{
-	// player = new Player(screen.GetWidth() / 2, 128);
-	tileFactory = new TileFactory();
-}
+	difficulty(difficulty), screen(screen) {}
 
 Map::~Map()
 {
-	delete tileFactory;
 	delete player;
 
 	for (int i = 0; i < map.size(); i++)

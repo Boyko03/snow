@@ -3,6 +3,7 @@
 #include <vector>
 #include "Tile.h"
 #include "Player.h"
+#include "TileFactory.h"
 using namespace std;
 
 class TileFactory;
@@ -21,7 +22,7 @@ protected:
 	int colls;
 	int border_width = 3;
 	float current_position = 0;
-	TileFactory* tileFactory;
+	TileFactory tileFactory;
 	Player* player;
 	Surface& screen;
 	Difficulty difficulty;

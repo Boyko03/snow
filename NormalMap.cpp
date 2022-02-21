@@ -38,26 +38,26 @@ void NormalMap::AddRow(bool empty)
 	vector<Tile> row;
 	// Left border
 	for (int i = 0; i < border_width; i++)
-		row.push_back(tileFactory->getTile(Tile::Terrains_t::Snow, Tile::Objects_t::TwoTrees));
+		row.push_back(tileFactory.getTile(Tile::Terrains_t::Snow, Tile::Objects_t::TwoTrees));
 
 	// Main map
 	if (empty)
 		for (int i = 0; i < colls; i++)
-			row.push_back(tileFactory->getTile(Tile::Terrains_t::Snow, Tile::Objects_t::None));
+			row.push_back(tileFactory.getTile(Tile::Terrains_t::Snow, Tile::Objects_t::None));
 	else {
 		for (int i = 0; i < colls; i++) {
 			if (flags_counter > 0 && flags_counter % DISTANCE == 0) {
 				if (i == 2 * colls / 3 - 2 && flags_counter % (2 * DISTANCE) == 0)
-					row.push_back(tileFactory->getTile(Tile::Terrains_t::Snow, Tile::Objects_t::RedFlag));
+					row.push_back(tileFactory.getTile(Tile::Terrains_t::Snow, Tile::Objects_t::RedFlag));
 				else if (i == colls / 3 + 2 && flags_counter % (2 * DISTANCE) != 0)
-					row.push_back(tileFactory->getTile(Tile::Terrains_t::Snow, Tile::Objects_t::BlueFlag));
+					row.push_back(tileFactory.getTile(Tile::Terrains_t::Snow, Tile::Objects_t::BlueFlag));
 				else
-					row.push_back(tileFactory->getTile(Tile::Terrains_t::Snow, Tile::Objects_t::None));
+					row.push_back(tileFactory.getTile(Tile::Terrains_t::Snow, Tile::Objects_t::None));
 			}
 			else if (flags_counter % DISTANCE == 0 && !finish_drawn)
-				row.push_back(tileFactory->getTile(Tile::Terrains_t::FinishLine, Tile::Objects_t::None));
+				row.push_back(tileFactory.getTile(Tile::Terrains_t::FinishLine, Tile::Objects_t::None));
 			else
-				row.push_back(tileFactory->getTile(Tile::Terrains_t::Snow, Tile::Objects_t::None));
+				row.push_back(tileFactory.getTile(Tile::Terrains_t::Snow, Tile::Objects_t::None));
 		}
 
 		flags_counter--;
@@ -65,7 +65,7 @@ void NormalMap::AddRow(bool empty)
 
 	// Right border
 	for (int i = 0; i < border_width; i++)
-		row.push_back(tileFactory->getTile(Tile::Terrains_t::Snow, Tile::Objects_t::TwoTrees));
+		row.push_back(tileFactory.getTile(Tile::Terrains_t::Snow, Tile::Objects_t::TwoTrees));
 
 	// Check for finish
 	if (!finish_drawn && flags_counter < 0 && flags_counter % DISTANCE == 0)

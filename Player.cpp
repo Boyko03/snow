@@ -78,6 +78,7 @@ void Player::Blink(int timer)
 			Pixel ref = copy.GetBuffer()[i * width + j];
 			
 			// Original values
+			int refA = (ref & 0xff000000) >> 24;
 			int refR = (ref & 0xff0000) >> 16;
 			int refG = (ref & 0x00ff00) >> 8;
 			int refB = ref & 0x0000ff;
@@ -98,7 +99,7 @@ void Player::Blink(int timer)
 			if (b < 0) b = -b;
 
 			// Apply new color
-			buf[i * width + j] = (refR << 16) | (g << 8) | b;
+			buf[i * width + j] = (refA << 24) | (refR << 16) | (g << 8) | b;
 		}
 	}
 }

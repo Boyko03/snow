@@ -18,19 +18,19 @@ void OffroadMap::AddRow(bool empty)
 	vector<Tile> row;
 	// Left border
 	for (int i = 0; i < border_width; i++)
-		row.push_back(tileFactory->getTile(Tile::Terrains_t::Snow, Tile::Objects_t::TwoTrees));
+		row.push_back(tileFactory.getTile(Tile::Terrains_t::Snow, Tile::Objects_t::TwoTrees));
 
 	// Main map
 	if (empty)
 		for (int i = 0; i < colls; i++)
-			row.push_back(tileFactory->getTile(Tile::Terrains_t::Snow, Tile::Objects_t::None));
+			row.push_back(tileFactory.getTile(Tile::Terrains_t::Snow, Tile::Objects_t::None));
 	else
 		for (int i = 0; i < colls; i++)
 			row.push_back(GenerateTile(i + border_width));
 
 	// Right border
 	for (int i = 0; i < border_width; i++)
-		row.push_back(tileFactory->getTile(Tile::Terrains_t::Snow, Tile::Objects_t::TwoTrees));
+		row.push_back(tileFactory.getTile(Tile::Terrains_t::Snow, Tile::Objects_t::TwoTrees));
 
 	map.push_back(row);
 }
@@ -48,16 +48,16 @@ Tile OffroadMap::GenerateTile(int column) {
 		{
 		case Tile::Objects_t::Tree:
 			tmp = &map[map_size - 1][column];
-			map[map_size - 1][column] = tileFactory->getTile(tmp->terrain, Tile::Objects_t::TwoTrees);
+			map[map_size - 1][column] = tileFactory.getTile(tmp->terrain, Tile::Objects_t::TwoTrees);
 			break;
 		default:
 			tmp = &map[map_size - 1][column];
-			map[map_size - 1][column] = tileFactory->getTile(tmp->terrain, Tile::Objects_t::TopOfTree);
+			map[map_size - 1][column] = tileFactory.getTile(tmp->terrain, Tile::Objects_t::TopOfTree);
 			break;
 		}
 	}
 
-	return tileFactory->getTile(terrain, object);
+	return tileFactory.getTile(terrain, object);
 }
 
 Tile::Objects_t OffroadMap::GetRandomObject() {
