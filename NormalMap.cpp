@@ -47,9 +47,9 @@ void NormalMap::AddRow(bool empty)
 	else {
 		for (int i = 0; i < colls; i++) {
 			if (flags_counter > 0 && flags_counter % DISTANCE == 0) {
-				if (i == 2 * colls / 3 - 2 && flags_counter % (2 * DISTANCE) == 0/*i == colls / 3 + 2 && flags_counter & 1*/)
+				if (i == 2 * colls / 3 - 2 && flags_counter % (2 * DISTANCE) == 0)
 					row.push_back(tileFactory->getTile(Tile::Terrains_t::Snow, Tile::Objects_t::RedFlag));
-				else if (i == colls / 3 + 2 && flags_counter % (2 * DISTANCE) != 0/*i == 2 * colls / 3 - 2 && flags_counter % (2 * DISTANCE) == 0*/)
+				else if (i == colls / 3 + 2 && flags_counter % (2 * DISTANCE) != 0)
 					row.push_back(tileFactory->getTile(Tile::Terrains_t::Snow, Tile::Objects_t::BlueFlag));
 				else
 					row.push_back(tileFactory->getTile(Tile::Terrains_t::Snow, Tile::Objects_t::None));
@@ -108,7 +108,6 @@ void NormalMap::Move(float deltaTime)
 	// Check if misses flag
 	if (py % TILE < 16 && !CheckFlag(px, py)) {
 		if (!missed_flag) {
-			// player->score = max(player->score - DISTANCE, 0);
 			total_time += 10000; // + 10 000 milliseconds
 			missed_flag = true;
 		}
@@ -123,8 +122,12 @@ bool NormalMap::CheckPos(int x, int y)
 	int ty = y / TILE;
 	Tile tile = map[ty][tx];
 
-	if (tile.object == Tile::Objects_t::None) return true;
-	return x % TILE > tile.cx + tile.dx || y % TILE > tile.cy || y % TILE < tile.cy - tile.dy;
+	if (tile.object == Tile::Objects_t::None) {
+		tile = map[ty][tx + 1];
+		if (tile.object == Tile::Objects_t::None) return true;
+		return x % TILE < TILE / 2 || (x + 16) % TILE < tile.cx - tile.dx || y % TILE > tile.cy || y % TILE < tile.cy - tile.dy;
+	}
+	return x % TILE > tile.cx + tile.dx || y % TILE >= tile.cy || y % TILE <= tile.cy - tile.dy;
 }
 
 bool NormalMap::CheckFlag(int x, int y)
