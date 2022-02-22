@@ -6,6 +6,8 @@
 #include "NormalMap.h"
 #include "OffroadMap.h"
 
+#include <Windows.h>
+
 namespace Tmpl8
 {
 	static Surface home_screen = Surface("assets/home-screen.png");
@@ -159,20 +161,24 @@ namespace Tmpl8
 		header.width = width;
 		header.height = height;
 
-		char filename[18];
-		sprintf(filename, "screenshot%03d.tga", counter++);
+		char filename[32];
+		sprintf(filename, "screenshots\\screenshot%03d.tga", counter++);
+		if (CreateDirectory("screenshots", NULL) || ERROR_ALREADY_EXISTS == GetLastError()) {
+			FILE* file;
+			if (file = fopen(filename, "wb")) {
+				fwrite(&header, sizeof(header), 1, file);
 
-		FILE* file;
-		if (file = fopen(filename, "wb")) {
-			fwrite(&header, sizeof(header), 1, file);
-
-			for (int i = 0; i < width * height; i++) {
-				fputc(buffer[i] & BlueMask, file);
-				fputc((buffer[i] & GreenMask) >> 8, file);
-				fputc((buffer[i] & RedMask) >> 16, file);
-				fputc(buffer[i] >> 24, file);
+				for (int i = 0; i < width * height; i++) {
+					fputc(buffer[i] & BlueMask, file);
+					fputc((buffer[i] & GreenMask) >> 8, file);
+					fputc((buffer[i] & RedMask) >> 16, file);
+					fputc(buffer[i] >> 24, file);
+				}
+				fclose(file);
 			}
-			fclose(file);
+		}
+		else {
+			// Failed to create directory
 		}
 	}
 
