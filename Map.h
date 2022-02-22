@@ -46,5 +46,7 @@ protected:
 	void DrawHearts();
 
 	void DrawBorder(vector<Tile>& row);
+
+	virtual void DrawTiles();
 };
 

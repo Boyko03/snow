@@ -24,6 +24,20 @@ void Map::DeleteRow()
 	map.erase(map.begin());
 }
 
+void Map::DrawTiles()
+{
+	int r = 0;
+	for (auto& row : map) {
+		int col = 0;
+		for (auto tile : row) {
+			int x = screen.GetWidth() / 2 - (colls / 2 - col + border_width) * TILE;
+			tile.Draw(x, r * TILE - current_position, screen);
+			col++;
+		}
+		r++;
+	}
+}
+
 void Map::DrawHearts()
 {
 	Sprite heart = Sprite(new Surface("assets/heart.png"), 1);

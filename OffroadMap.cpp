@@ -131,16 +131,7 @@ bool OffroadMap::CheckPos(int x, int y)
 
 void OffroadMap::Draw()
 {
-	int r = 0;
-	for (auto& row : map) {
-		int col = 0;
-		for (auto tile : row) {
-			int x = screen.GetWidth() / 2 - (colls / 2 - col + border_width) * TILE;
-			tile.Draw(x, r * TILE - current_position, screen);
-			col++;
-		}
-		r++;
-	}
+	Map::DrawTiles();
 
 	DrawPlayer();
 	DrawHearts();
