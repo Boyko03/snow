@@ -395,7 +395,7 @@ int main( int argc, char **argv )
 			case SDL_MOUSEMOTION:
 				int width, height;
 				SDL_GetWindowSize(window, &width, &height);
-				game->MouseMove(event.motion.x / (int)((double)width / 800.0), event.motion.y / (int)((double)height / 512.0));
+				game->MouseMove(event.motion.x * ScreenWidth / width, event.motion.y * ScreenHeight / height);
 				break;
 			case SDL_MOUSEBUTTONUP:
 				game->MouseUp( event.button.button );
