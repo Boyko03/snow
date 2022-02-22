@@ -48,5 +48,7 @@ protected:
 	void DrawBorder(vector<Tile>& row);
 
 	virtual void DrawTiles();
+	void DrawBackground();
+	void DrawForeground();
 };
 

@@ -30,8 +30,8 @@ Tile TileFactory::getTile(Tile::Terrains_t terrain, Tile::Objects_t object)
 	case Tile::Objects_t::Pine1:
 		return Tile(10, 0, -1, -1, 0, 0, object, terrain, TILE, 2 * TILE);
 	case Tile::Objects_t::Pine2:
-		return Tile(11, 0, -1, -1, 0, 0, object, terrain, TILE, 2 * TILE);
+		return Tile(11, 0, -1, -1, 0, 0, object, terrain, 38, 2 * TILE);
 	case Tile::Objects_t::WinterTree:
-		return Tile(12, 0, -1, -1, 0, 0, object, terrain, TILE, 2 * TILE);
+		return Tile(13, 0, -1, -1, 0, 0, object, terrain, 42, 2 * TILE);
 	}
 }

@@ -29,6 +29,19 @@ void Tile::Draw(int x, int y, Surface& screen)
     DrawObjectOnly(x, y - (tile_height - TILE), screen);
 }
 
+void Tile::DrawBackground(int x, int y, Surface& screen)
+{
+    int tx = terrains.at(terrain).first;
+    int ty = terrains.at(terrain).second;
+
+    DrawTile(tx, ty, screen, x, y);
+}
+
+void Tile::DrawForegound(int x, int y, Surface& screen)
+{
+    DrawObjectOnly(x, y - (tile_height - TILE), screen);
+}
+
 void Tile::DrawObjectOnly(int x, int y, Surface& screen)
 {
     // Draw Object If Exists

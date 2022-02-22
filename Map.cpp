@@ -38,6 +38,34 @@ void Map::DrawTiles()
 	}
 }
 
+void Map::DrawBackground()
+{
+	int r = 0;
+	for (auto& row : map) {
+		int col = 0;
+		for (auto tile : row) {
+			int x = screen.GetWidth() / 2 - (colls / 2 - col + border_width) * TILE;
+			tile.DrawBackground(x, r * TILE - current_position, screen);
+			col++;
+		}
+		r++;
+	}
+}
+
+void Map::DrawForeground()
+{
+	int r = 0;
+	for (auto& row : map) {
+		int col = 0;
+		for (auto tile : row) {
+			int x = screen.GetWidth() / 2 - (colls / 2 - col + border_width) * TILE;
+			tile.DrawForegound(x, r * TILE - current_position, screen);
+			col++;
+		}
+		r++;
+	}
+}
+
 void Map::DrawHearts()
 {
 	Sprite heart = Sprite(new Surface("assets/heart.png"), 1);
@@ -49,7 +77,8 @@ void Map::DrawHearts()
 void Map::DrawBorder(vector<Tile>& row)
 {
 	for (int i = 0; i < border_width; i++) {
-		int r = rand() % 3;
-		row.push_back(tileFactory.getTile(Tile::Terrains_t::Snow, Tile::Objects_t(r + 10))); // 10, 11, 12
+		int r = rand() % 4;
+		if (r == 0) row.push_back(tileFactory.getTile(Tile::Terrains_t::Snow, Tile::Objects_t::None));
+		else row.push_back(tileFactory.getTile(Tile::Terrains_t::Snow, Tile::Objects_t(r + 9))); // 10, 11, 12
 	}
 }

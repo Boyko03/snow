@@ -131,9 +131,10 @@ bool OffroadMap::CheckPos(int x, int y)
 
 void OffroadMap::Draw()
 {
-	Map::DrawTiles();
-
+	DrawBackground();
+	DrawForeground();
 	DrawPlayer();
+
 	DrawHearts();
 	PrintScore();
 }
@@ -152,20 +153,20 @@ void OffroadMap::DrawPlayer()
 	Tile::Objects_t None = Tile::Objects_t::None;
 
 	if ((tile->object == Tile::Objects_t::TopOfTree && current_position < TILE / 2 + 8)
-		|| tile->object == Tile::Objects_t::TwoTrees)
+		|| tile->object == Tile::Objects_t::TwoTrees && tx >= border_width)
 		tile->DrawObjectOnly(x + tx * TILE, y, screen);
 
 	tile = &map[ty][tx + 1];
 	if ((tile->object == Tile::Objects_t::TopOfTree && current_position < TILE / 2 + 8)
-		|| tile->object == Tile::Objects_t::TwoTrees)
+		|| tile->object == Tile::Objects_t::TwoTrees && tx + 1 < colls + border_width)
 		tile->DrawObjectOnly(x + (tx + 1) * TILE, y, screen);
 
 	tile = &map[ty + 1][tx];
-	if (tile->object != None)
+	if (tile->object != None && tx >= border_width)
 		tile->DrawObjectOnly(x + tx * TILE, y + TILE, screen);
 
 	tile = &map[ty + 1][tx + 1];
-	if (tile->object != None)
+	if (tile->object != None && tx + 1 < colls + border_width)
 		tile->DrawObjectOnly(x + (tx + 1) * TILE, y + TILE, screen);
 }
 

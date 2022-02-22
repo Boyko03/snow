@@ -78,6 +78,8 @@ private:
 
 public:
 	void Draw(int x, int y, Surface& screen);
+	void DrawBackground(int x, int y, Surface& screen);
+	void DrawForegound(int x, int y, Surface& screen);
 	void DrawObjectOnly(int x, int y, Surface& screen);
 
 private:

@@ -148,9 +148,10 @@ bool NormalMap::CheckFlag(int x, int y)
 
 void NormalMap::Draw()
 {
-	Map::DrawTiles();
-
+	DrawBackground();
+	DrawForeground();
 	DrawPlayer();
+
 	DrawHearts();
 	PrintTime();
 }
@@ -169,19 +170,19 @@ void NormalMap::DrawPlayer()
 	Tile::Objects_t None = Tile::Objects_t::None;
 
 	tile = &map[ty + 1][tx];
-	if (tile->object != None)
+	if (tile->object != None && tx >= border_width)
 		tile->DrawObjectOnly(x + tx * TILE, y, screen);
 
 	tile = &map[ty + 1][tx + 1];
-	if (tile->object != None)
+	if (tile->object != None && tx + 1 < colls + border_width)
 		tile->DrawObjectOnly(x + (tx + 1) * TILE, y, screen);
 
 	tile = &map[ty + 2][tx];
-	if (tile->object != None)
+	if (tile->object != None && tx >= border_width)
 		tile->DrawObjectOnly(x + tx * TILE, y + TILE, screen);
 
 	tile = &map[ty + 2][tx + 1];
-	if (tile->object != None)
+	if (tile->object != None && tx + 1 < colls + border_width)
 		tile->DrawObjectOnly(x + (tx + 1) * TILE, y + TILE, screen);
 }
 
