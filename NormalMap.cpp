@@ -37,8 +37,7 @@ void NormalMap::AddRow(bool empty)
 {
 	vector<Tile> row;
 	// Left border
-	for (int i = 0; i < border_width; i++)
-		row.push_back(tileFactory.getTile(Tile::Terrains_t::Snow, Tile::Objects_t::TwoTrees));
+	DrawBorder(row);
 
 	// Main map
 	if (empty)
@@ -64,8 +63,7 @@ void NormalMap::AddRow(bool empty)
 	}
 
 	// Right border
-	for (int i = 0; i < border_width; i++)
-		row.push_back(tileFactory.getTile(Tile::Terrains_t::Snow, Tile::Objects_t::TwoTrees));
+	DrawBorder(row);
 
 	// Check for finish
 	if (!finish_drawn && flags_counter < 0 && flags_counter % DISTANCE == 0)

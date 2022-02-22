@@ -27,5 +27,11 @@ Tile TileFactory::getTile(Tile::Terrains_t terrain, Tile::Objects_t object)
 		return Tile(4, 0, TILE / 2, 20, 6, 16, object, terrain, TILE, 2 * TILE);
 	case Tile::Objects_t::RedFlag:
 		return Tile(7, 0, TILE / 2, 20, 6, 16, object, terrain, TILE, 2 * TILE);
+	case Tile::Objects_t::Pine1:
+		return Tile(10, 0, -1, -1, 0, 0, object, terrain, TILE, 2 * TILE);
+	case Tile::Objects_t::Pine2:
+		return Tile(11, 0, -1, -1, 0, 0, object, terrain, TILE, 2 * TILE);
+	case Tile::Objects_t::WinterTree:
+		return Tile(12, 0, -1, -1, 0, 0, object, terrain, TILE, 2 * TILE);
 	}
 }

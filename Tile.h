@@ -40,7 +40,12 @@ public:
 
 		// Normal map
 		BlueFlag,
-		RedFlag
+		RedFlag,
+
+		// Border trees
+		Pine1,
+		Pine2,
+		WinterTree
 	};
 
 	/// <summary>

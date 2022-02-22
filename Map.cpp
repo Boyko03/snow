@@ -31,3 +31,11 @@ void Map::DrawHearts()
 		heart.Draw(&screen, heart.GetWidth() * i + 16, 16);
 	}
 }
+
+void Map::DrawBorder(vector<Tile>& row)
+{
+	for (int i = 0; i < border_width; i++) {
+		int r = rand() % 3;
+		row.push_back(tileFactory.getTile(Tile::Terrains_t::Snow, Tile::Objects_t(r + 10))); // 10, 11, 12
+	}
+}

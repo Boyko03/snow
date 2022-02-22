@@ -17,8 +17,7 @@ void OffroadMap::AddRow(bool empty)
 {
 	vector<Tile> row;
 	// Left border
-	for (int i = 0; i < border_width; i++)
-		row.push_back(tileFactory.getTile(Tile::Terrains_t::Snow, Tile::Objects_t::TwoTrees));
+	DrawBorder(row);
 
 	// Main map
 	if (empty)
@@ -29,8 +28,7 @@ void OffroadMap::AddRow(bool empty)
 			row.push_back(GenerateTile(i + border_width));
 
 	// Right border
-	for (int i = 0; i < border_width; i++)
-		row.push_back(tileFactory.getTile(Tile::Terrains_t::Snow, Tile::Objects_t::TwoTrees));
+	DrawBorder(row);
 
 	map.push_back(row);
 }
