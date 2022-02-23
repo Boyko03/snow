@@ -14,7 +14,7 @@ public:
 	void Shutdown();
 	void Tick( float deltaTime );
 	void MouseUp(int button);
-	void MouseDown( int button ) { /* implement if you want to detect mouse button presses */ }
+	void MouseDown( int button );
 	void MouseMove(int x, int y);
 	void KeyUp(int key);
 	void KeyDown(int key);
@@ -43,11 +43,22 @@ private:
 		OffRoad
 	} mode;
 
+	bool isMouseDown = false;
+	bool btnSelect = false;
+	int selectorIndex = 0;
+
 	void MainScreenHandler();
 	void LevelModeHandler();
 	void LevelDifficultyHandler();
 	void EndgameHandler();
 	bool IsBackClicked();
+
+	void ArrowKeyUpHandler(int key);
+
+	void DrawHomeScreen();
+	void DrawModeSelectScreen();
+	void DrawDifficultySelectScreen();
+
 	// Prints score during endgame state
 	void PrintScore(Surface& buff);
 };
