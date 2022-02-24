@@ -410,7 +410,8 @@ namespace Tmpl8
 			if (name_index > 0) name[--name_index] = 0;
 		}
 		else if (name_index < 12) {
-			name[name_index++] = GetCharByKey(key);
+			char c = GetCharByKey(key);
+			if (c) name[name_index++] = c;
 		}
 	}
 
@@ -419,5 +420,7 @@ namespace Tmpl8
 		if (key >= 4 && key < 30) return key + 'a' - 4;
 		if (key == 39) return '0';
 		if (key >= 30 && key < 39) return key + '1' - 30;
+		
+		return 0;
 	}
 };
