@@ -134,6 +134,7 @@ namespace Tmpl8
 			selectorIndex = 0;
 			break;
 		default:
+			if (state == STATE::MAIN_SCREEN) EnterName(key);
 			break;
 		}
 	}
@@ -143,6 +144,7 @@ namespace Tmpl8
 		switch (state)
 		{
 		case STATE::MAIN_SCREEN:
+			EnterName(key);
 			break;
 		case STATE::LEVEL_MODE:
 			if (key == 80) {
@@ -246,11 +248,16 @@ namespace Tmpl8
 
 	void Game::MainScreenHandler()
 	{
-		if (btnSelect) btnSelect = false, state = STATE::LEVEL_MODE;
+		if (strcmp(name, "")) {
+			if (btnSelect) {
+				btnSelect = false;
+				state = STATE::LEVEL_MODE;
+			}
 
-		if (mx > 263 && mx < 548 && my > 311 && my < 386) {
-			if (isMouseDown) btnStart.SetFrame(1);
-			else state = STATE::LEVEL_MODE;
+			if (mx > 263 && mx < 548 && my > 311 && my < 386) {
+				if (isMouseDown) btnStart.SetFrame(1);
+				else state = STATE::LEVEL_MODE;
+			}
 		}
 		if (!isMouseDown) btnStart.SetFrame(0);
 	}
@@ -270,10 +277,12 @@ namespace Tmpl8
 			else if (mx > 162 && mx < 350 && my > 192 && my < 345) {
 				state = STATE::LEVEL_DIFFICULTY;
 				mode = Mode::Normal;
+				selectorIndex = 0;
 			}
 			else if (mx > 434 && mx < 623 && my > 192 && my < 345) {
 				state = STATE::LEVEL_DIFFICULTY;
 				mode = Mode::OffRoad;
+				selectorIndex = 0;
 			}
 		}
 	}
@@ -309,14 +318,13 @@ namespace Tmpl8
 
 	void Game::EndgameHandler()
 	{
-		if (!isMouseDown) {
-			if (my > 340 && my < 400)
-				if (mx > 210 && mx < 366)
-					Reset();
-				else if (mx > 449 && mx < 606) {
-					Reset();
-					state = STATE::MAIN_SCREEN;
-				}
+		if (!isMouseDown && my > 340 && my < 400) {
+			if (mx > 210 && mx < 366)
+				Reset();
+			else if (mx > 449 && mx < 606) {
+				Reset();
+				state = STATE::MAIN_SCREEN;
+			}
 		}
 	}
 
@@ -329,6 +337,15 @@ namespace Tmpl8
 	{
 		home_screen.CopyTo(screen, 0, 0);
 		btnStart.Draw(screen, 262, 310);
+
+		if (strcmp(name, "")) {
+			screen->Box(256, 230, 556, 265, 0x00ff00);
+			screen->Print(name, 265, 237, 0x34eb43, 4);
+		}
+		else {
+			screen->Box(256, 230, 556, 265, 0xff0000);
+			screen->Print("Name", 265, 237, 0xcccccc, 4);
+		}
 	}
 
 	void Game::DrawModeSelectScreen()
@@ -385,5 +402,22 @@ namespace Tmpl8
 			screen->Centre(time_buff, 220, 0x00ff00, 4);
 			delete tmp;
 		}
+	}
+
+	void Game::EnterName(int key)
+	{
+		if (key == 42) {
+			if (name_index > 0) name[--name_index] = 0;
+		}
+		else if (name_index < 12) {
+			name[name_index++] = GetCharByKey(key);
+		}
+	}
+
+	char Game::GetCharByKey(int key)
+	{
+		if (key >= 4 && key < 30) return key + 'a' - 4;
+		if (key == 39) return '0';
+		if (key >= 30 && key < 39) return key + '1' - 30;
 	}
 };

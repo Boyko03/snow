@@ -29,6 +29,9 @@ private:
 
 	bool SELECT = false;
 
+	char name[32] = "";
+	int name_index = 0;
+
 	enum class STATE {
 		MAIN_SCREEN,
 		LEVEL_MODE,
@@ -61,6 +64,9 @@ private:
 
 	// Prints score during endgame state
 	void PrintScore(Surface& buff);
+
+	void EnterName(int key);
+	char GetCharByKey(int key);
 };
 
 }; // namespace Tmpl8
