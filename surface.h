@@ -8,18 +8,21 @@ namespace Tmpl8 {
 constexpr int RedMask = 0xff0000;
 constexpr int GreenMask = 0x00ff00;
 constexpr int BlueMask = 0x0000ff;
+constexpr int AlphaMask = 0xff000000;
 
 typedef unsigned int Pixel; // unsigned int is assumed to be 32-bit, which seems a safe assumption.
 
 inline Pixel AddBlend( Pixel a_Color1, Pixel a_Color2 )
 {
+	const unsigned int a = (a_Color1 & AlphaMask) + (a_Color2 & AlphaMask);
 	const unsigned int r = (a_Color1 & RedMask) + (a_Color2 & RedMask);
 	const unsigned int g = (a_Color1 & GreenMask) + (a_Color2 & GreenMask);
 	const unsigned int b = (a_Color1 & BlueMask) + (a_Color2 & BlueMask);
+	const unsigned a1 = (a & AlphaMask);
 	const unsigned r1 = (r & RedMask) | (RedMask * (r >> 24));
 	const unsigned g1 = (g & GreenMask) | (GreenMask * (g >> 16));
 	const unsigned b1 = (b & BlueMask) | (BlueMask * (b >> 8));
-	return (r1 + g1 + b1);
+	return (a1 + r1 + g1 + b1);
 }
 
 // subtractive blending

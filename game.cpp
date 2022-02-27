@@ -119,8 +119,17 @@ namespace Tmpl8
 	void Game::KeyUp(int key)
 	{
 		static bool end = false;
-		if (state == STATE::END_GAME)
-		{
+
+		// High priority
+		if (key == 70) {	// PrtScr
+			ScreenShot();
+			return;
+		}
+		else if (key == 68) {	// f11
+			fullscreen = !fullscreen;
+			return;
+		}
+		else if (state == STATE::END_GAME) {
 			if (!end) end = true;
 			else {
 				Reset();
@@ -136,11 +145,6 @@ namespace Tmpl8
 		case 4: case 7: case 26: case 22:
 			if (state == STATE::GAME) { player->NormalPosition(); break; }
 			else ArrowKeyUpHandler(key); break;
-		case 70:	// PrtScr
-			ScreenShot(); break;
-		case 68:	// f11
-			fullscreen = !fullscreen;
-			break;
 		case 40: case 44: // Enter, Space
 			btnSelect = true;
 			MouseUp(1);
@@ -345,12 +349,12 @@ namespace Tmpl8
 		btnStart.Draw(screen, 262, 310);
 
 		if (strcmp(name, "")) {
-			screen->Box(256, 230, 556, 265, 0x00ff00);
-			screen->Print(name, 265, 237, 0x34eb43, 4);
+			screen->Box(256, 230, 556, 265, 0xff00ff00);
+			screen->Print(name, 265, 237, 0xff34eb43, 4);
 		}
 		else {
-			screen->Box(256, 230, 556, 265, 0xff0000);
-			screen->Print("Name", 265, 237, 0xcccccc, 4);
+			screen->Box(256, 230, 556, 265, 0xffff0000);
+			screen->Print("Name", 265, 237, 0xffcccccc, 4);
 		}
 	}
 
@@ -402,7 +406,7 @@ namespace Tmpl8
 				if (src[i * r_width + j] != 0)
 					screen->GetBuffer()[i * r_width + j] = src[i * r_width + j];
 
-		screen->Centre("Press any key to continue", 14 * TILE + 10, 0xeeeeee, 2);
+		screen->Centre("Press any key to continue", 14 * TILE + 10, 0xffeeeeee, 2);
 
 		if (mode == Mode::OffRoad) {
 			/*char win_buff[16];
@@ -418,17 +422,17 @@ namespace Tmpl8
 			int i = 0;
 			for (auto stat : top10) {
 				int y1 = (4 + i) * TILE + 5, y2 = (5 + i) * TILE - 5;
-				screen->BlendBar(3 * TILE, y1, screen->GetWidth() - 3 * TILE, y2, 0x222222);
+				screen->BlendBar(3 * TILE, y1, screen->GetWidth() - 3 * TILE, y2, 0xff222222);
 
 				char pos[4] = "";
 				sprintf(pos, "%2d.", i + 1);
-				screen->Print(pos, 3 * TILE + 10, y1, 0xffff00, 3);
+				screen->Print(pos, 3 * TILE + 10, y1, 0xffffff00, 3);
 
-				screen->Print(stat.name, 5 * TILE + 10, y1, 0xffff00, 3);
+				screen->Print(stat.name, 5 * TILE + 10, y1, 0xffffff00, 3);
 
 				char score[15];
 				sprintf(score, "%*c%*d", 10, ' ', 4, stat.score);
-				screen->Print(score, 440, y1, 0xffff00, 3);
+				screen->Print(score, 440, y1, 0xffffff00, 3);
 				i++;
 			}
 		}
@@ -448,20 +452,20 @@ namespace Tmpl8
 			int i = 0;
 			for (auto stat : top10) {
 				int y1 = (4 + i) * TILE + 5, y2 = (5 + i) * TILE - 5;
-				screen->BlendBar(3 * TILE, y1, screen->GetWidth() - 3 * TILE, y2, 0x222222);
+				screen->BlendBar(3 * TILE, y1, screen->GetWidth() - 3 * TILE, y2, 0xff222222);
 
 				char pos[4] = "";
 				sprintf(pos, "%2d.", i + 1);
-				screen->Print(pos, 3 * TILE + 10, y1, 0xffff00, 3);
+				screen->Print(pos, 3 * TILE + 10, y1, 0xffffff00, 3);
 
-				screen->Print(stat.name, 5 * TILE + 10, y1, 0xffff00, 3);
+				screen->Print(stat.name, 5 * TILE + 10, y1, 0xffffff00, 3);
 				char score[16 + 6];
 				int total_time = (int)stat.score;
 				int minutes = total_time / 60000;
 				int seconds = total_time % 60000 / 1000;
 				int millis = total_time % 1000 / 10;
 				sprintf(score, "%*c%02d:%02d:%02d", 6, ' ', minutes, seconds, millis);
-				screen->Print(score, 440, y1, 0xffff00, 3);
+				screen->Print(score, 440, y1, 0xffffff00, 3);
 				i++;
 			}
 		}
