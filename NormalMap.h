@@ -15,6 +15,8 @@ public:
 
 	char* GetTotalTime();
 
+	float GetTotalTimeMs() const { return total_time; }
+
 private:
 	// Distance between flags
 	int DISTANCE;

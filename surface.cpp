@@ -204,12 +204,22 @@ void Surface::Box( int x1, int y1, int x2, int y2, Pixel c )
 	Line( (float)x1, (float)y1, (float)x1, (float)y2, c );
 }
 
-void Surface::Bar( int x1, int y1, int x2, int y2, Pixel c )
+void Surface::Bar(int x1, int y1, int x2, int y2, Pixel c)
+{
+	Pixel* a = x1 + y1 * m_Pitch + m_Buffer;
+	for (int y = y1; y <= y2; y++)
+	{
+		for (int x = 0; x <= (x2 - x1); x++) a[x] = c;
+		a += m_Pitch;
+	}
+}
+
+void Surface::BlendBar( int x1, int y1, int x2, int y2, Pixel c )
 {
 	Pixel* a = x1 + y1 * m_Pitch + m_Buffer;
 	for ( int y = y1; y <= y2; y++ )
 	{
-		for ( int x = 0; x <= (x2 - x1); x++ ) a[x] = c;
+		for ( int x = 0; x <= (x2 - x1); x++ ) a[x] = AddBlend(c, a[x]);
 		a += m_Pitch;
 	}
 }

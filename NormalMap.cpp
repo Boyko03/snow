@@ -188,7 +188,7 @@ void NormalMap::DrawPlayer()
 
 bool NormalMap::IsWin()
 {
-	return flags_counter < -max_flags_shown_per_frame * DISTANCE - DISTANCE / 2;
+	return flags_counter < -max_flags_shown_per_frame * DISTANCE - DISTANCE / 2 + 2;
 }
 
 void NormalMap::PrintTime()

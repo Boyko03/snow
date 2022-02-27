@@ -1,5 +1,8 @@
-#include "Player.h"
 #pragma once
+
+#include "Player.h"
+
+#include <vector>
 
 namespace Tmpl8 {
 
@@ -37,8 +40,7 @@ private:
 		LEVEL_MODE,
 		LEVEL_DIFFICULTY,
 		GAME,
-		GAME_OVER,
-		WIN
+		END_GAME
 	} state = STATE::MAIN_SCREEN;
 
 	enum class Mode {
@@ -46,9 +48,21 @@ private:
 		OffRoad
 	} mode;
 
+	struct ScoreStat {
+		char name[13];
+		int score;
+	};
+
+	struct TimeStat {
+		char name[13];
+		float score;
+	};
+
 	bool isMouseDown = false;
 	bool btnSelect = false;
 	int selectorIndex = 0;
+
+	bool areStatsWritten = false;
 
 	void MainScreenHandler();
 	void LevelModeHandler();
@@ -65,8 +79,13 @@ private:
 	// Prints score during endgame state
 	void PrintScore(Surface& buff);
 
+	std::vector<ScoreStat> WriteStatsScore();
+	std::vector<TimeStat> WriteStatsTime();
+
 	void EnterName(int key);
 	char GetCharByKey(int key);
+
+	void PrintFPS(float deltaTime);
 };
 
 }; // namespace Tmpl8

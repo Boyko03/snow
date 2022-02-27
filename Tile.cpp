@@ -60,5 +60,5 @@ void Tile::DrawTile(int tx, int ty, Surface& screen, int x, int y, bool is_objec
     for (int i = 0; i < height && i + y < s_height; i++, src += t_width, dst += s_width)
         for (int j = 0; j < width && j + x < s_width; j++)
             // Skip alpha and draw only visible pixels
-            if (j + x >= 0 && i + y >= 0 && (src[j] & (0xff << 24)) != 0) dst[j] = src[j];
+            if (j + x >= 0 && i + y >= 0 && (src[j] & (0xff000000)) != 0) dst[j] = src[j];
 }

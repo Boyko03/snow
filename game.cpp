@@ -7,6 +7,8 @@
 #include "OffroadMap.h"
 
 #include <Windows.h>
+#include <queue>
+#include <string>
 
 namespace Tmpl8
 {
@@ -16,6 +18,8 @@ namespace Tmpl8
 	// static Surface level_difficulty_offroad = Surface("assets/level-difficulty-off.png");
 	static Surface game_over = Surface("assets/gameover.png");
 	static Surface winner = Surface("assets/win.png");
+	static Surface bg_end = Surface("assets/bg_end.png");
+	static Surface ranking = Surface("assets/ranking.png");
 
 	static Sprite btnStart = Sprite(new Surface("assets/buttons/btn_start.png"), 2);
 	static Sprite btnSlalom = Sprite(new Surface("assets/buttons/btn_slalom.png"), 2);
@@ -65,21 +69,18 @@ namespace Tmpl8
 			screen->Clear(0);
 			map->Move(deltaTime);
 			map->Draw();
-			if (player->health == 0) {
-				state = STATE::GAME_OVER;
+			if (player->health == 0 || map->IsWin()) {
+				state = STATE::END_GAME;
 			}
-			if (map->IsWin())
-				state = STATE::WIN;
 			break;
-		case STATE::GAME_OVER:
-			PrintScore(game_over);
-			break;
-		case STATE::WIN:
-			PrintScore(winner);
+		case STATE::END_GAME:
+			PrintScore(bg_end);
 			break;
 		default:
 			break;
 		}
+
+		// PrintFPS(deltaTime);
 	}
 
 	void Game::MouseUp(int button)
@@ -91,7 +92,7 @@ namespace Tmpl8
 			case STATE::MAIN_SCREEN: MainScreenHandler(); break;
 			case STATE::LEVEL_MODE: LevelModeHandler(); break;
 			case STATE::LEVEL_DIFFICULTY: LevelDifficultyHandler(); break;
-			case STATE::GAME_OVER: case STATE::WIN: EndgameHandler(); break;
+			case STATE::END_GAME: EndgameHandler(); break;
 			}
 		}
 	}
@@ -105,7 +106,7 @@ namespace Tmpl8
 			case STATE::MAIN_SCREEN: MainScreenHandler(); break;
 			case STATE::LEVEL_MODE: LevelModeHandler(); break;
 			case STATE::LEVEL_DIFFICULTY: LevelDifficultyHandler(); break;
-			case STATE::GAME_OVER: case STATE::WIN: EndgameHandler(); break;
+			case STATE::END_GAME: EndgameHandler(); break;
 			}
 		}
 	}
@@ -117,6 +118,18 @@ namespace Tmpl8
 
 	void Game::KeyUp(int key)
 	{
+		static bool end = false;
+		if (state == STATE::END_GAME)
+		{
+			if (!end) end = true;
+			else {
+				Reset();
+				state = STATE::MAIN_SCREEN;
+				end = false;
+			}
+			return;
+		}
+
 		switch (key)
 		{
 		case 79: case 80: case 81: case 82:
@@ -162,10 +175,6 @@ namespace Tmpl8
 			break;
 		case STATE::GAME:
 			player->NormalPosition();
-			break;
-		case STATE::GAME_OVER:
-			break;
-		case STATE::WIN:
 			break;
 		default:
 			break;
@@ -243,6 +252,7 @@ namespace Tmpl8
 		delete map;
 		map = NULL;
 
+		areStatsWritten = false;
 		state = STATE::GAME;
 	}
 
@@ -318,13 +328,9 @@ namespace Tmpl8
 
 	void Game::EndgameHandler()
 	{
-		if (!isMouseDown && my > 340 && my < 400) {
-			if (mx > 210 && mx < 366)
-				Reset();
-			else if (mx > 449 && mx < 606) {
-				Reset();
-				state = STATE::MAIN_SCREEN;
-			}
+		if (!isMouseDown) {
+			Reset();
+			state = STATE::MAIN_SCREEN;
 		}
 	}
 
@@ -386,22 +392,179 @@ namespace Tmpl8
 
 	void Game::PrintScore(Surface& buff)
 	{
-		for (int i = 2 * TILE; i < screen->GetHeight() - 2 * TILE; i++)
-			for (int j = 2 * TILE; j < screen->GetWidth() - 2 * TILE; j++)
-				screen->GetBuffer()[i * screen->GetWidth() + j] = buff.GetBuffer()[i * screen->GetWidth() + j];
+		// ranking.CopyTo(screen, 0, 0);
+		int r_width = ranking.GetWidth();
+		int r_height = ranking.GetHeight();
+		Pixel* src = ranking.GetBuffer();
+
+		for (int i = 0; i < r_height; i++)
+			for (int j = 0; j < r_width; j++)
+				if (src[i * r_width + j] != 0)
+					screen->GetBuffer()[i * r_width + j] = src[i * r_width + j];
+
+		screen->Centre("Press any key to continue", 14 * TILE + 10, 0xeeeeee, 2);
 
 		if (mode == Mode::OffRoad) {
-			char win_buff[16];
+			/*char win_buff[16];
 			sprintf(win_buff, "Score: %d", player->score);
-			screen->Centre(win_buff, 220, 0x00ff00, 4);
+			screen->Centre(win_buff, 220, 0x00ff00, 4);*/
+
+			static std::vector<ScoreStat> top10;
+			if (!areStatsWritten) {
+				top10 = WriteStatsScore();
+				areStatsWritten = true;
+			}
+
+			int i = 0;
+			for (auto stat : top10) {
+				int y1 = (4 + i) * TILE + 5, y2 = (5 + i) * TILE - 5;
+				screen->BlendBar(3 * TILE, y1, screen->GetWidth() - 3 * TILE, y2, 0x222222);
+
+				char pos[4] = "";
+				sprintf(pos, "%2d.", i + 1);
+				screen->Print(pos, 3 * TILE + 10, y1, 0xffff00, 3);
+
+				screen->Print(stat.name, 5 * TILE + 10, y1, 0xffff00, 3);
+
+				char score[15];
+				sprintf(score, "%*c%*d", 10, ' ', 4, stat.score);
+				screen->Print(score, 440, y1, 0xffff00, 3);
+				i++;
+			}
 		}
 		else if (mode == Mode::Normal) {
-			char* tmp = dynamic_cast<NormalMap*>(map)->GetTotalTime();
+			/*char* tmp = dynamic_cast<NormalMap*>(map)->GetTotalTime();
 			char time_buff[24];
 			sprintf(time_buff, "Time: %s", tmp);
 			screen->Centre(time_buff, 220, 0x00ff00, 4);
-			delete tmp;
+			delete tmp;*/
+
+			static std::vector<TimeStat> top10;
+			if (!areStatsWritten) {
+				top10 = WriteStatsTime();
+				areStatsWritten = true;
+			}
+
+			int i = 0;
+			for (auto stat : top10) {
+				int y1 = (4 + i) * TILE + 5, y2 = (5 + i) * TILE - 5;
+				screen->BlendBar(3 * TILE, y1, screen->GetWidth() - 3 * TILE, y2, 0x222222);
+
+				char pos[4] = "";
+				sprintf(pos, "%2d.", i + 1);
+				screen->Print(pos, 3 * TILE + 10, y1, 0xffff00, 3);
+
+				screen->Print(stat.name, 5 * TILE + 10, y1, 0xffff00, 3);
+				char score[16 + 6];
+				int total_time = (int)stat.score;
+				int minutes = total_time / 60000;
+				int seconds = total_time % 60000 / 1000;
+				int millis = total_time % 1000 / 10;
+				sprintf(score, "%*c%02d:%02d:%02d", 6, ' ', minutes, seconds, millis);
+				screen->Print(score, 440, y1, 0xffff00, 3);
+				i++;
+			}
 		}
+	}
+
+	std::vector<Game::ScoreStat> Game::WriteStatsScore()
+	{
+		string filename = "stats\\score_";
+		if (difficulty == Map::Difficulty::Easy) filename += "easy.txt";
+		else if (difficulty == Map::Difficulty::Medium) filename += "medium.txt";
+		else filename += "hard.txt";
+
+		class Compare
+		{
+		public:
+			bool operator() (ScoreStat a, ScoreStat b)
+			{
+				return a.score < b.score;
+			}
+		};
+
+		vector<ScoreStat> top10;
+
+		ScoreStat new_stat;
+		strcpy(new_stat.name, name);
+		new_stat.score = player->score;
+
+		if (CreateDirectory("stats", NULL) || ERROR_ALREADY_EXISTS == GetLastError()) {
+			FILE* file;
+
+			priority_queue<ScoreStat, vector<ScoreStat>, Compare> all_stats;
+			all_stats.push(new_stat);
+			if (file = fopen(filename.c_str(), "rb")) {
+				ScoreStat tmp;
+				for (int i = 0; fread(&tmp, sizeof(tmp), 1, file) == 1; i++) {
+					all_stats.push(tmp);
+				}
+				fclose(file);
+			}
+
+			if (file = fopen(filename.c_str(), "wb")) {
+				while (!all_stats.empty()) {
+					fwrite(&all_stats.top(), sizeof(new_stat), 1, file);
+					if (top10.size() < 10) top10.push_back(all_stats.top());
+					all_stats.pop();
+				}
+				fclose(file);
+			}
+		}
+		else {
+			// Failed to create directory
+		}
+
+		return top10;
+	}
+
+	std::vector<Game::TimeStat> Game::WriteStatsTime()
+	// void Game::WriteStatsTime()
+	{
+		string filename = "stats\\time_";
+		if (difficulty == Map::Difficulty::Easy) filename += "easy.txt";
+		else if (difficulty == Map::Difficulty::Medium) filename += "medium.txt";
+		else filename += "hard.txt";
+
+		class Compare
+		{
+		public:
+			bool operator() (TimeStat a, TimeStat b)
+			{
+				return a.score > b.score;
+			}
+		};
+
+		vector<TimeStat> top10;
+
+		TimeStat new_stat;
+		strcpy(new_stat.name, name);
+		new_stat.score = dynamic_cast<NormalMap*>(map)->GetTotalTimeMs();
+
+		if (CreateDirectory("stats", NULL) || ERROR_ALREADY_EXISTS == GetLastError()) {
+			FILE* file;
+
+			priority_queue<TimeStat, vector<TimeStat>, Compare> all_stats;
+			if (player->health > 0) all_stats.push(new_stat); // Save result only if player hasn't lost
+			if (file = fopen(filename.c_str(), "rb")) {
+				TimeStat tmp;
+				for (int i = 0; fread(&tmp, sizeof(tmp), 1, file) == 1; i++) {
+					all_stats.push(tmp);
+				}
+				fclose(file);
+			}
+
+			if (file = fopen(filename.c_str(), "wb")) {
+				while (!all_stats.empty()) {
+					fwrite(&all_stats.top(), sizeof(new_stat), 1, file);
+					if (top10.size() < 10) top10.push_back(all_stats.top());
+					all_stats.pop();
+				}
+				fclose(file);
+			}
+		}
+
+		return top10;
 	}
 
 	void Game::EnterName(int key)
@@ -422,5 +585,24 @@ namespace Tmpl8
 		if (key >= 30 && key < 39) return key + '1' - 30;
 		
 		return 0;
+	}
+
+	void Game::PrintFPS(float deltaTime)
+	{
+		static float delta = 0.0f, fps = 1 / (deltaTime / 1000.0f);
+		static int frames = 0;
+
+		delta += deltaTime;
+		frames++;
+
+		if (delta > 1000.0f) {
+			fps = frames / (delta / 1000.0f);
+			frames = 0;
+			delta = 0.0f;
+		}
+
+		char FPS[12];
+		sprintf(FPS, "FPS: %.2f", fps);
+		screen->Print(FPS, 10, 10, 0x2e9121, 2);
 	}
 };
