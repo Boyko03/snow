@@ -31,6 +31,7 @@ private:
 	int my;
 
 	bool SELECT = false;
+	bool PAUSE = false;
 
 	char name[32] = "";
 	int name_index = 0;

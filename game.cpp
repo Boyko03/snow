@@ -5,6 +5,7 @@
 #include "Map.h"
 #include "NormalMap.h"
 #include "OffroadMap.h"
+#include "template.h"
 
 #include <Windows.h>
 #include <queue>
@@ -23,6 +24,7 @@ namespace Tmpl8
 	static Sprite btnStart = Sprite(new Surface("assets/buttons/btn_start.png"), 2);
 	static Sprite btnSlalom = Sprite(new Surface("assets/buttons/btn_slalom.png"), 2);
 	static Sprite btnOffroadHard = Sprite(new Surface("assets/buttons/btn_offroad_hard.png"), 2);
+	static Sprite btnPause = Sprite(new Surface("assets/buttons/pause.png"), 1);
 
 	Map::Difficulty difficulty;
 
@@ -49,37 +51,42 @@ namespace Tmpl8
 	// -----------------------------------------------------------
 	void Game::Tick(float deltaTime)
 	{
-		switch (state)
-		{
-		case STATE::MAIN_SCREEN:
-			DrawHomeScreen(); break;
-		case STATE::LEVEL_MODE:
-			DrawModeSelectScreen();	break;
-		case STATE::LEVEL_DIFFICULTY:
-			DrawDifficultySelectScreen(); break;
-		case STATE::GAME:
-			if (!map) {
-				if (mode == Mode::Normal)
-					map = new NormalMap(20, 20, difficulty, *screen);
-				else if (mode == Mode::OffRoad)
-					map = new OffroadMap(20, 20, difficulty, *screen);
-			}
-			player = map->GetPlayer();
-			screen->Clear(0);
-			map->Move(deltaTime);
-			map->Draw();
-			if (player->health == 0 || map->IsWin()) {
-				state = STATE::END_GAME;
-			}
-			break;
-		case STATE::END_GAME:
-			PrintScore(bg_end);
-			break;
-		default:
-			break;
+		if (PAUSE) {
+			btnPause.Draw(screen, ScreenWidth / 2 - btnPause.GetWidth() / 2, ScreenHeight / 2 - btnPause.GetHeight() / 2);
 		}
+		else {
+			switch (state)
+			{
+			case STATE::MAIN_SCREEN:
+				DrawHomeScreen(); break;
+			case STATE::LEVEL_MODE:
+				DrawModeSelectScreen();	break;
+			case STATE::LEVEL_DIFFICULTY:
+				DrawDifficultySelectScreen(); break;
+			case STATE::GAME:
+				if (!map) {
+					if (mode == Mode::Normal)
+						map = new NormalMap(20, 20, difficulty, *screen);
+					else if (mode == Mode::OffRoad)
+						map = new OffroadMap(20, 20, difficulty, *screen);
+				}
+				player = map->GetPlayer();
+				screen->Clear(0);
+				map->Move(deltaTime);
+				map->Draw();
+				if (player->health == 0 || map->IsWin()) {
+					state = STATE::END_GAME;
+				}
+				break;
+			case STATE::END_GAME:
+				PrintScore(bg_end);
+				break;
+			default:
+				break;
+			}
 
-		// PrintFPS(deltaTime);
+			// PrintFPS(deltaTime);
+		}
 	}
 
 	void Game::MouseUp(int button)
@@ -140,6 +147,10 @@ namespace Tmpl8
 
 		switch (key)
 		{
+		case 19: // P
+			if (state == STATE::GAME)
+				PAUSE = !PAUSE;
+			break;
 		case 79: case 80: case 81: case 82:
 		case 4: case 7: case 26: case 22:
 			if (state == STATE::GAME) { player->NormalPosition(); break; }
@@ -190,7 +201,7 @@ namespace Tmpl8
 		// Right	->	79;  7
 		// Up 		->	82; 26
 		// Down		->	81; 22
-		if (state == STATE::GAME)
+		if (state == STATE::GAME && !PAUSE)
 			switch (key)
 			{
 			case 80: case 4:
@@ -209,8 +220,6 @@ namespace Tmpl8
 	void Game::ScreenShot()
 	{
 		static int counter = 1;
-		int width = screen->GetWidth();
-		int height = screen->GetHeight();
 		Pixel* buffer = screen->GetBuffer();
 
 		struct TGAHeader
@@ -226,8 +235,8 @@ namespace Tmpl8
 
 		TGAHeader header;
 
-		header.width = width;
-		header.height = height;
+		header.width = ScreenWidth;
+		header.height = ScreenHeight;
 
 		char filename[32];
 		sprintf(filename, "screenshots\\screenshot%03d.tga", counter++);
@@ -236,7 +245,7 @@ namespace Tmpl8
 			if (file = fopen(filename, "wb")) {
 				fwrite(&header, sizeof(header), 1, file);
 
-				for (int i = 0; i < width * height; i++) {
+				for (int i = 0; i < ScreenWidth * ScreenHeight; i++) {
 					fputc(buffer[i] & BlueMask, file);
 					fputc((buffer[i] & GreenMask) >> 8, file);
 					fputc((buffer[i] & RedMask) >> 16, file);
