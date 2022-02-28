@@ -51,10 +51,16 @@ namespace Tmpl8
 	// -----------------------------------------------------------
 	void Game::Tick(float deltaTime)
 	{
+		static int p = 0;
 		if (PAUSE) {
+			static Surface copy = Surface(ScreenWidth, ScreenHeight);
+			if (p == 0) screen->CopyTo(&copy, 0, 0), p = 1;
+			copy.CopyTo(screen, 0, 0);
+			screen->SubBlendBar(0, 0, ScreenWidth, ScreenHeight, 0x21212121);
 			btnPause.Draw(screen, ScreenWidth / 2 - btnPause.GetWidth() / 2, ScreenHeight / 2 - btnPause.GetHeight() / 2);
 		}
 		else {
+			p = 0;
 			switch (state)
 			{
 			case STATE::MAIN_SCREEN:
@@ -150,6 +156,7 @@ namespace Tmpl8
 		case 19: // P
 			if (state == STATE::GAME)
 				PAUSE = !PAUSE;
+			else if (state == STATE::MAIN_SCREEN) EnterName(key);
 			break;
 		case 79: case 80: case 81: case 82:
 		case 4: case 7: case 26: case 22:
@@ -404,6 +411,13 @@ namespace Tmpl8
 
 	void Game::PrintScore(Surface& buff)
 	{
+		static int tmp = 1;
+		static Surface copy = Surface(ScreenWidth, ScreenHeight);
+		if (tmp) screen->CopyTo(&copy, 0, 0), tmp = 0;
+
+		copy.CopyTo(screen, 0, 0);
+		screen->SubBlendBar(0, 0, ScreenWidth, ScreenHeight, 0x21212121);
+
 		int r_width = ranking.GetWidth();
 		int r_height = ranking.GetHeight();
 		Pixel* src = ranking.GetBuffer();
@@ -416,10 +430,6 @@ namespace Tmpl8
 		screen->Centre("Press any key to continue", 14 * TILE + 10, 0xffeeeeee, 2);
 
 		if (mode == Mode::OffRoad) {
-			/*char win_buff[16];
-			sprintf(win_buff, "Score: %d", player->score);
-			screen->Centre(win_buff, 220, 0x00ff00, 4);*/
-
 			static std::vector<ScoreStat> top10;
 			if (!areStatsWritten) {
 				top10 = WriteStatsScore();
@@ -453,12 +463,6 @@ namespace Tmpl8
 			}
 		}
 		else if (mode == Mode::Normal) {
-			/*char* tmp = dynamic_cast<NormalMap*>(map)->GetTotalTime();
-			char time_buff[24];
-			sprintf(time_buff, "Time: %s", tmp);
-			screen->Centre(time_buff, 220, 0x00ff00, 4);
-			delete tmp;*/
-
 			static std::vector<TimeStat> top10;
 			if (!areStatsWritten) {
 				top10 = WriteStatsTime();

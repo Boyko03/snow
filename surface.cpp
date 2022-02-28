@@ -224,6 +224,16 @@ void Surface::BlendBar( int x1, int y1, int x2, int y2, Pixel c )
 	}
 }
 
+void Surface::SubBlendBar(int x1, int y1, int x2, int y2, Pixel c)
+{
+	Pixel* a = x1 + y1 * m_Pitch + m_Buffer;
+	for (int y = y1; y <= y2; y++)
+	{
+		for (int x = 0; x <= (x2 - x1); x++) a[x] = SubBlend(a[x], c);
+		a += m_Pitch;
+	}
+}
+
 void Surface::CopyTo( Surface* a_Dst, int a_X, int a_Y )
 {
 	Pixel* dst = a_Dst->GetBuffer();
