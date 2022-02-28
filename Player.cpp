@@ -1,8 +1,8 @@
 #include "Player.h"
 #include <cstdio>
 
-Sprite Player::player = Sprite(new Surface("assets/skier2.png"), 6);
-Sprite Player::copy = Sprite(new Surface("assets/skier2.png"), 6);
+Sprite Player::player = Sprite(new Surface("assets/skier_32.png"), 6);
+Sprite Player::copy = Sprite(new Surface("assets/skier_32.png"), 6);
 
 Player::Player(float x, float y, int health, float speed) : x(x), y(y), health(health), speed(speed)
 {
