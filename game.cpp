@@ -15,11 +15,10 @@ namespace Tmpl8
 	static Surface home_screen = Surface("assets/home-screen.png");
 	static Surface level_mode = Surface("assets/level-mode.png");
 	static Surface level_difficulty = Surface("assets/level-difficulty.png");
-	// static Surface level_difficulty_offroad = Surface("assets/level-difficulty-off.png");
-	static Surface game_over = Surface("assets/gameover.png");
-	static Surface winner = Surface("assets/win.png");
+
 	static Surface bg_end = Surface("assets/bg_end.png");
 	static Surface ranking = Surface("assets/ranking.png");
+	static Sprite top10sprite = Sprite(new Surface("assets/top10.png"), 1);
 
 	static Sprite btnStart = Sprite(new Surface("assets/buttons/btn_start.png"), 2);
 	static Sprite btnSlalom = Sprite(new Surface("assets/buttons/btn_slalom.png"), 2);
@@ -396,7 +395,6 @@ namespace Tmpl8
 
 	void Game::PrintScore(Surface& buff)
 	{
-		// ranking.CopyTo(screen, 0, 0);
 		int r_width = ranking.GetWidth();
 		int r_height = ranking.GetHeight();
 		Pixel* src = ranking.GetBuffer();
@@ -420,20 +418,29 @@ namespace Tmpl8
 			}
 
 			int i = 0;
+			bool isPlayerResultPrinted = false;
 			for (auto stat : top10) {
+				unsigned int color = 0xffffff00;
+				if (!isPlayerResultPrinted && !strcmp(stat.name, name) && stat.score == player->score)
+					color = 0xff00ff00, isPlayerResultPrinted = true;
+
 				int y1 = (4 + i) * TILE + 5, y2 = (5 + i) * TILE - 5;
 				screen->BlendBar(3 * TILE, y1, screen->GetWidth() - 3 * TILE, y2, 0xff222222);
 
 				char pos[4] = "";
 				sprintf(pos, "%2d.", i + 1);
-				screen->Print(pos, 3 * TILE + 10, y1, 0xffffff00, 3);
+				screen->Print(pos, 3 * TILE + 10, y1, color, 3);
 
-				screen->Print(stat.name, 5 * TILE + 10, y1, 0xffffff00, 3);
+				screen->Print(stat.name, 5 * TILE + 10, y1, color, 3);
 
 				char score[15];
 				sprintf(score, "%*c%*d", 10, ' ', 4, stat.score);
-				screen->Print(score, 440, y1, 0xffffff00, 3);
+				screen->Print(score, 440, y1, color, 3);
 				i++;
+			}
+
+			if (isPlayerResultPrinted) {
+				top10sprite.Draw(screen, screen->GetWidth() / 2 - top10sprite.GetWidth() / 2, 2 * TILE);
 			}
 		}
 		else if (mode == Mode::Normal) {
@@ -450,23 +457,33 @@ namespace Tmpl8
 			}
 
 			int i = 0;
+			bool isPlayerResultPrinted = false;
 			for (auto stat : top10) {
+				unsigned int color = 0xffffff00;
+				if (!isPlayerResultPrinted &&
+					!strcmp(stat.name, name) && (int)stat.score == (int)dynamic_cast<NormalMap*>(map)->GetTotalTimeMs())
+					color = 0xff00ff00, isPlayerResultPrinted = true;
+
 				int y1 = (4 + i) * TILE + 5, y2 = (5 + i) * TILE - 5;
 				screen->BlendBar(3 * TILE, y1, screen->GetWidth() - 3 * TILE, y2, 0xff222222);
 
 				char pos[4] = "";
 				sprintf(pos, "%2d.", i + 1);
-				screen->Print(pos, 3 * TILE + 10, y1, 0xffffff00, 3);
+				screen->Print(pos, 3 * TILE + 10, y1, color, 3);
 
-				screen->Print(stat.name, 5 * TILE + 10, y1, 0xffffff00, 3);
+				screen->Print(stat.name, 5 * TILE + 10, y1, color, 3);
 				char score[16 + 6];
 				int total_time = (int)stat.score;
 				int minutes = total_time / 60000;
 				int seconds = total_time % 60000 / 1000;
 				int millis = total_time % 1000 / 10;
 				sprintf(score, "%*c%02d:%02d:%02d", 6, ' ', minutes, seconds, millis);
-				screen->Print(score, 440, y1, 0xffffff00, 3);
+				screen->Print(score, 440, y1, color, 3);
 				i++;
+			}
+
+			if (isPlayerResultPrinted) {
+				top10sprite.Draw(screen, screen->GetWidth() / 2 - top10sprite.GetWidth() / 2, 2 * TILE);
 			}
 		}
 	}

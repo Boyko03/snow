@@ -2,6 +2,7 @@ tmp/
 stats/
 screenshots/
 
+snow_x64.exe
 snow_x64_debug.exe
 
 ## Ignore Visual Studio temporary files, build results, and
