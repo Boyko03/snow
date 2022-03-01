@@ -409,6 +409,11 @@ namespace Tmpl8
 			screen->Box(256, 230, 556, 265, 0xffff0000);
 			screen->Print("Name", 265, 237, 0xffcccccc, 4);
 		}
+		static int br = 0;
+		int x = 265 + 4 * 6 * strlen(name);
+		if (br++ < 50)
+			screen->Line(x, 234, x, 261, 0xff010101);
+		if (br == 100) br = 0;
 	}
 
 	void Game::DrawModeSelectScreen()
