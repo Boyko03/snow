@@ -382,7 +382,7 @@ int main( int argc, char **argv )
 				exitapp = 1;
 				break;
 			case SDL_KEYDOWN:
-				if (event.key.keysym.sym == SDLK_ESCAPE) 
+				if (event.key.keysym.sym == SDLK_ESCAPE && game->GetState() == Game::STATE::MAIN_SCREEN) 
 				{
 					exitapp = 1;
 					// find other keys here: http://sdl.beuc.net/sdl.wiki/SDLKey

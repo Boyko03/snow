@@ -12,17 +12,14 @@ class Game
 public:
 	bool fullscreen = false;
 
-	void SetTarget( Surface* surface ) { screen = surface; }
-	void Init();
-	void Shutdown();
-	void Tick( float deltaTime );
-	void MouseUp(int button);
-	void MouseDown( int button );
-	void MouseMove(int x, int y);
-	void KeyUp(int key);
-	void KeyDown(int key);
-	void ScreenShot();
-	void Reset();
+	enum class STATE {
+		MAIN_SCREEN,
+		LEVEL_MODE,
+		LEVEL_DIFFICULTY,
+		GAME,
+		END_GAME
+	};
+
 private:
 	Player* player;
 	Surface* screen;
@@ -36,13 +33,7 @@ private:
 	char name[32] = "";
 	int name_index = 0;
 
-	enum class STATE {
-		MAIN_SCREEN,
-		LEVEL_MODE,
-		LEVEL_DIFFICULTY,
-		GAME,
-		END_GAME
-	} state = STATE::MAIN_SCREEN;
+	STATE state = STATE::MAIN_SCREEN;
 
 	enum class Mode {
 		Normal,
@@ -65,6 +56,22 @@ private:
 
 	bool areStatsWritten = false;
 
+public:
+	void SetTarget( Surface* surface ) { screen = surface; }
+	void Init();
+	void Shutdown();
+	void Tick( float deltaTime );
+	void MouseUp(int button);
+	void MouseDown( int button );
+	void MouseMove(int x, int y);
+	void KeyUp(int key);
+	void KeyDown(int key);
+	void ScreenShot();
+	void Reset();
+
+	STATE GetState() { return state; }
+
+private:
 	void MainScreenHandler();
 	void LevelModeHandler();
 	void LevelDifficultyHandler();

@@ -173,6 +173,11 @@ namespace Tmpl8
 				selectorIndex = 0;
 			}
 			break;
+		case 41:	// Esc
+			if (state == STATE::LEVEL_MODE) state = STATE::MAIN_SCREEN;
+			else if (state == STATE::LEVEL_DIFFICULTY) state = STATE::LEVEL_MODE;
+			else if (state == STATE::GAME) PAUSE = !PAUSE;
+			break;
 		default:
 			if (state == STATE::MAIN_SCREEN) EnterName(key);
 			break;
@@ -400,6 +405,8 @@ namespace Tmpl8
 	{
 		home_screen.CopyTo(screen, 0, 0);
 		btnStart.Draw(screen, 262, 310);
+
+		screen->Centre("Press Esc to exit", ScreenHeight - 2 * TILE, 0xff555555, 2);
 
 		if (strcmp(name, "")) {
 			screen->Box(256, 230, 556, 265, 0xff00ff00);
