@@ -68,6 +68,7 @@ private:
 	void MainScreenHandler();
 	void LevelModeHandler();
 	void LevelDifficultyHandler();
+	void PauseBtnsHandler();
 	void EndgameHandler();
 	bool IsBackClicked();
 
@@ -76,6 +77,8 @@ private:
 	void DrawHomeScreen();
 	void DrawModeSelectScreen();
 	void DrawDifficultySelectScreen();
+
+	void DrawPauseScreen();
 
 	// Prints score during endgame state
 	void PrintScore(Surface& buff);

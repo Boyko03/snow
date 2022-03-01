@@ -26,6 +26,10 @@ namespace Tmpl8
 	static Sprite btnOffroadHard = Sprite(new Surface("assets/buttons/btn_offroad_hard.png"), 2);
 	static Sprite btnPause = Sprite(new Surface("assets/buttons/pause.png"), 1);
 
+	static Sprite btnResume = Sprite(new Surface("assets/buttons/btn_resume.png"), 1);
+	static Sprite btnRestart = Sprite(new Surface("assets/buttons/btn_restart.png"), 1);
+	static Sprite btnQuit = Sprite(new Surface("assets/buttons/btn_quit.png"), 1);
+
 	Map::Difficulty difficulty;
 
 	Map* map = NULL;
@@ -56,8 +60,7 @@ namespace Tmpl8
 			static Surface copy = Surface(ScreenWidth, ScreenHeight);
 			if (p == 0) screen->CopyTo(&copy, 0, 0), p = 1;
 			copy.CopyTo(screen, 0, 0);
-			screen->SubBlendBar(0, 0, ScreenWidth, ScreenHeight, 0x21212121);
-			btnPause.Draw(screen, ScreenWidth / 2 - btnPause.GetWidth() / 2, ScreenHeight / 2 - btnPause.GetHeight() / 2);
+			DrawPauseScreen();
 		}
 		else {
 			p = 0;
@@ -104,6 +107,8 @@ namespace Tmpl8
 			case STATE::MAIN_SCREEN: MainScreenHandler(); break;
 			case STATE::LEVEL_MODE: LevelModeHandler(); break;
 			case STATE::LEVEL_DIFFICULTY: LevelDifficultyHandler(); break;
+			case STATE::GAME:
+				if (PAUSE) PauseBtnsHandler(); break;
 			case STATE::END_GAME: EndgameHandler(); break;
 			}
 		}
@@ -163,9 +168,11 @@ namespace Tmpl8
 			if (state == STATE::GAME) { player->NormalPosition(); break; }
 			else ArrowKeyUpHandler(key); break;
 		case 40: case 44: // Enter, Space
-			btnSelect = true;
-			MouseUp(1);
-			selectorIndex = 0;
+			if (state != STATE::GAME) {
+				btnSelect = true;
+				MouseUp(1);
+				selectorIndex = 0;
+			}
 			break;
 		default:
 			if (state == STATE::MAIN_SCREEN) EnterName(key);
@@ -325,23 +332,48 @@ namespace Tmpl8
 			return;
 		}
 
-		if (!isMouseDown && IsBackClicked()) {
-			state = STATE::LEVEL_MODE;
-			selectorIndex = (int)mode;
+		if (!isMouseDown) {
+			if (IsBackClicked()) {
+				state = STATE::LEVEL_MODE;
+				selectorIndex = (int)mode;
+			}
+			// width: 203, height: 163
+			else if (mx > 92 && mx < 295 && my > 168 && my < 331) {
+				difficulty = Map::Difficulty::Easy;
+				state = STATE::GAME;
+			}
+			// space between: 17
+			else if (mx > 312 && mx < 505 && my > 168 && my < 331) {
+				difficulty = Map::Difficulty::Medium;
+				state = STATE::GAME;
+			}
+			else if (mx > 532 && mx < 735 && my > 168 && my < 331) {
+				difficulty = Map::Difficulty::Hard;
+				state = STATE::GAME;
+			}
 		}
-		// width: 203, height: 163
-		else if (mx > 92 && mx < 295 && my > 168 && my < 331) {
-			difficulty = Map::Difficulty::Easy;
-			state = STATE::GAME;
-		}
-		// space between: 17
-		else if (mx > 312 && mx < 505 && my > 168 && my < 331) {
-			difficulty = Map::Difficulty::Medium;
-			state = STATE::GAME;
-		}
-		else if (mx > 532 && mx < 735 && my > 168 && my < 331) {
-			difficulty = Map::Difficulty::Hard;
-			state = STATE::GAME;
+	}
+
+	void Game::PauseBtnsHandler()
+	{
+		if (!isMouseDown) {
+			if (mx > 273 && mx < 526)
+				// Resume
+				if (my > 90 && my < 166) {
+					PAUSE = false;
+				}
+				// Restart
+				else if (my > 218 && my < 294) {
+					PAUSE = false;
+					Reset();
+					state = STATE::GAME;
+				}
+				// Quit
+				else if (my > 345 && my < 418) {
+					PAUSE = false;
+					Reset();
+					state = STATE::MAIN_SCREEN;
+				}
 		}
 	}
 
@@ -407,6 +439,18 @@ namespace Tmpl8
 			btnOffroadHard.SetFrame(selectorIndex == 2);
 			btnOffroadHard.Draw(screen, 532, 168);
 		}
+	}
+
+	void Game::DrawPauseScreen()
+	{
+		screen->SubBlendBar(0, 0, ScreenWidth, ScreenHeight, 0x21212121);
+		// btnPause.Draw(screen, ScreenWidth / 2 - btnPause.GetWidth() / 2, ScreenHeight / 2 - btnPause.GetHeight() / 2);
+		int btnHeight = btnResume.GetHeight();
+		int X = ScreenWidth / 2 - btnResume.GetWidth() / 2;		// Resume, Restart and Quit are same size
+		int Y = ScreenHeight / 2 - btnHeight / 2;
+		btnResume.Draw(screen, X, Y - btnHeight);
+		btnRestart.Draw(screen, X, Y);
+		btnQuit.Draw(screen, X, Y + btnHeight);
 	}
 
 	void Game::PrintScore(Surface& buff)
