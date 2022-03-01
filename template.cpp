@@ -367,9 +367,9 @@ int main( int argc, char **argv )
 		t.reset();
 
 		if (game->fullscreen)
-			SDL_MaximizeWindow(window);
+			SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
 		else
-			SDL_RestoreWindow(window);
+			SDL_SetWindowFullscreen(window, 0);
 
 		game->Tick( elapsedTime );
 		// event loop
