@@ -301,10 +301,10 @@ void swap()
 int main( int argc, char **argv ) 
 {  
 #ifdef _MSC_VER
-    if (!redirectIO())
-        return 1;
+    /*if (!redirectIO())
+        return 1;*/
 #endif
-	printf( "application started.\n" );
+	// printf( "application started.\n" );
 	SDL_Init( SDL_INIT_VIDEO );
 #ifdef ADVANCEDGL
 #ifdef FULLSCREEN
