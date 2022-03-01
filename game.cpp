@@ -24,11 +24,10 @@ namespace Tmpl8
 	static Sprite btnStart = Sprite(new Surface("assets/buttons/btn_start.png"), 2);
 	static Sprite btnSlalom = Sprite(new Surface("assets/buttons/btn_slalom.png"), 2);
 	static Sprite btnOffroadHard = Sprite(new Surface("assets/buttons/btn_offroad_hard.png"), 2);
-	static Sprite btnPause = Sprite(new Surface("assets/buttons/pause.png"), 1);
 
-	static Sprite btnResume = Sprite(new Surface("assets/buttons/btn_resume.png"), 1);
-	static Sprite btnRestart = Sprite(new Surface("assets/buttons/btn_restart.png"), 1);
-	static Sprite btnQuit = Sprite(new Surface("assets/buttons/btn_quit.png"), 1);
+	static Sprite btnResume = Sprite(new Surface("assets/buttons/play-circle.png"), 1);
+	static Sprite btnRestart = Sprite(new Surface("assets/buttons/arrow-counterclockwise.png"), 1);
+	static Sprite btnQuit = Sprite(new Surface("assets/buttons/house-door.png"), 1);
 
 	Map::Difficulty difficulty;
 
@@ -356,24 +355,31 @@ namespace Tmpl8
 
 	void Game::PauseBtnsHandler()
 	{
+		int btnWidth = btnResume.GetWidth();
+		int btnHeight = btnResume.GetHeight();
+
+		int X = ScreenWidth / 2 - btnWidth / 2;		// Resume, Restart and Quit are same size
+		int Y = ScreenHeight / 2 - btnHeight / 2;
+
 		if (!isMouseDown) {
-			if (mx > 273 && mx < 526)
+			if (my > Y && my < Y + btnHeight) {
 				// Resume
-				if (my > 90 && my < 166) {
+				if (mx > X - btnWidth - TILE && mx < X - TILE) {
 					PAUSE = false;
 				}
 				// Restart
-				else if (my > 218 && my < 294) {
+				else if (mx > X && mx < X + btnWidth) {
 					PAUSE = false;
 					Reset();
 					state = STATE::GAME;
 				}
 				// Quit
-				else if (my > 345 && my < 418) {
+				else if (mx > X + btnWidth + TILE && mx < X + 2 * btnWidth + TILE) {
 					PAUSE = false;
 					Reset();
 					state = STATE::MAIN_SCREEN;
 				}
+			}
 		}
 	}
 
@@ -444,13 +450,17 @@ namespace Tmpl8
 	void Game::DrawPauseScreen()
 	{
 		screen->SubBlendBar(0, 0, ScreenWidth, ScreenHeight, 0x21212121);
-		// btnPause.Draw(screen, ScreenWidth / 2 - btnPause.GetWidth() / 2, ScreenHeight / 2 - btnPause.GetHeight() / 2);
+		int btnWidth = btnResume.GetWidth();
 		int btnHeight = btnResume.GetHeight();
-		int X = ScreenWidth / 2 - btnResume.GetWidth() / 2;		// Resume, Restart and Quit are same size
+
+		int X = ScreenWidth / 2 - btnWidth / 2;		// Resume, Restart and Quit are same size
 		int Y = ScreenHeight / 2 - btnHeight / 2;
-		btnResume.Draw(screen, X, Y - btnHeight);
+
+		btnResume.Draw(screen, X - btnWidth - TILE, Y);
+
 		btnRestart.Draw(screen, X, Y);
-		btnQuit.Draw(screen, X, Y + btnHeight);
+
+		btnQuit.Draw(screen, X + btnWidth + TILE, Y);
 	}
 
 	void Game::PrintScore(Surface& buff)
