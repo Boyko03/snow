@@ -29,7 +29,7 @@ private:
 		Normal = 0,
 		Right = 1
 	} direction = Direction::Normal;
-	static Sprite player;
+	Sprite player;
 	static Sprite copy;
 
 	int acceleration_counter = 0;
