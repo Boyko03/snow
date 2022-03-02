@@ -55,6 +55,7 @@ private:
 	int selectorIndex = 0;
 
 	bool areStatsWritten = false;
+	bool makeCopy = true;
 
 public:
 	void SetTarget( Surface* surface ) { screen = surface; }

@@ -1,5 +1,6 @@
 #include "Player.h"
 #include <cstdio>
+#include <Windows.h>
 
 Sprite Player::copy = Sprite(new Surface("assets/skier_32.png"), 6);
 
@@ -13,7 +14,6 @@ void Player::TurnLeft()
 {
 	//x -= speed + 1.0f;
 	speed *= 0.999f;
-	player.SetFrame(4);
 	direction = Direction::Left;
 }
 
@@ -21,13 +21,12 @@ void Player::TurnRight()
 {
 	//x += speed + 1.0f;
 	speed *= 0.999;
-	player.SetFrame(3);
 	direction = Direction::Right;
 }
 
 void Player::SlowDown()
 {
-	speed -= 0.5f;
+	speed -= 0.1f;
 	if (speed < 0) speed = 0;
 	player.SetFrame(5);
 	direction = Direction::Normal;
@@ -35,18 +34,10 @@ void Player::SlowDown()
 
 void Player::Accelerate()
 {
-	if (acceleration_counter % 5 == 0) {
-		switch (acceleration_counter / 5)
-		{
-		case 1: case 3: player.SetFrame(1); break;
-		case 2: player.SetFrame(2); break;
-		default:
-			player.SetFrame(0);
-			if (acceleration_counter != 0) speed += 0.2f;
-			acceleration_counter = 0;
-			break;
-		}
-	}
+	if (acceleration_counter < 10) player.SetFrame(0), speed += 0.01f;
+	else if (acceleration_counter < 20) player.SetFrame(2);
+	else if (acceleration_counter < 30) player.SetFrame(1), speed += 0.01f;
+	else acceleration_counter = 0;
 	acceleration_counter++;
 	direction = Direction::Normal;
 }
@@ -60,6 +51,7 @@ void Player::NormalPosition()
 
 void Player::Draw(Surface& screen)
 {
+	SetCorrectFrame();
 	speed += 0.001f;
 	if (speed > 5.0f) speed = 5.0f;
 	x += (float)direction * (speed);
@@ -101,5 +93,36 @@ void Player::Blink(int timer)
 			// Apply new color
 			buf[i * width + j] = (refA << 24) | (refR << 16) | (g << 8) | b;
 		}
+	}
+}
+
+void Player::SetCorrectFrame()
+{
+	current_frame = player.GetFrame();
+
+	if (GetAsyncKeyState(VK_LEFT) || GetAsyncKeyState(VkKeyScanA('a'))) {
+		TurnLeft();
+		if (GetAsyncKeyState(VK_DOWN) || GetAsyncKeyState(VkKeyScanA('s'))) {
+			speed += 0.001f;
+		}
+		if (current_frame == 3) player.SetFrame(2);
+		else player.SetFrame(4);
+	}
+	else if (GetAsyncKeyState(VK_RIGHT) || GetAsyncKeyState(VkKeyScanA('d'))) {
+		TurnRight();
+		if (GetAsyncKeyState(VK_DOWN) || GetAsyncKeyState(VkKeyScanA('s'))) {
+			speed += 0.001f;
+		}
+		if (current_frame == 4) player.SetFrame(2);
+		else player.SetFrame(3);
+	}
+	else if (GetAsyncKeyState(VK_UP) || GetAsyncKeyState(VkKeyScanA('w'))) {
+		SlowDown();
+	}
+	else if (GetAsyncKeyState(VK_DOWN) || GetAsyncKeyState(VkKeyScanA('s'))) {
+		Accelerate();
+	}
+	else {
+		NormalPosition();
 	}
 }

@@ -164,8 +164,7 @@ namespace Tmpl8
 			break;
 		case 79: case 80: case 81: case 82:
 		case 4: case 7: case 26: case 22:
-			if (state == STATE::GAME) { player->NormalPosition(); break; }
-			else ArrowKeyUpHandler(key); break;
+			ArrowKeyUpHandler(key); break;
 		case 40: case 44: // Enter, Space
 			if (state != STATE::GAME) {
 				btnSelect = true;
@@ -205,9 +204,6 @@ namespace Tmpl8
 			}
 			else if (key == 79) selectorIndex = (selectorIndex + 1) % 3;
 			break;
-		case STATE::GAME:
-			player->NormalPosition();
-			break;
 		default:
 			break;
 		}
@@ -219,7 +215,7 @@ namespace Tmpl8
 		// Right	->	79;  7
 		// Up 		->	82; 26
 		// Down		->	81; 22
-		if (state == STATE::GAME && !PAUSE)
+		/*if (state == STATE::GAME && !PAUSE)
 			switch (key)
 			{
 			case 80: case 4:
@@ -232,7 +228,7 @@ namespace Tmpl8
 				player->Accelerate(); break;
 			default:
 				break;
-			}
+			}*/
 	}
 
 	void Game::ScreenShot()
@@ -282,6 +278,7 @@ namespace Tmpl8
 		delete map;
 		map = NULL;
 
+		makeCopy = true;
 		areStatsWritten = false;
 		state = STATE::GAME;
 	}
@@ -477,9 +474,8 @@ namespace Tmpl8
 
 	void Game::PrintScore(Surface& buff)
 	{
-		static int tmp = 1;
 		static Surface copy = Surface(ScreenWidth, ScreenHeight);
-		if (tmp) screen->CopyTo(&copy, 0, 0), tmp = 0;
+		if (makeCopy) screen->CopyTo(&copy, 0, 0), makeCopy = false;
 
 		copy.CopyTo(screen, 0, 0);
 		screen->SubBlendBar(0, 0, ScreenWidth, ScreenHeight, 0x21212121);

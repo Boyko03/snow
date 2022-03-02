@@ -15,11 +15,6 @@ public:
 
 	Player(float x, float y, int health = 3, float speed = 0.5f);
 
-	void TurnLeft();
-	void TurnRight();
-	void SlowDown();
-	void Accelerate();
-	void NormalPosition();
 	void Draw(Surface& screen);
 	void Blink(int timer);
 
@@ -33,5 +28,13 @@ private:
 	static Sprite copy;
 
 	int acceleration_counter = 0;
+	int current_frame = 2;
+
+	void TurnLeft();
+	void TurnRight();
+	void SlowDown();
+	void Accelerate();
+	void NormalPosition();
+	void SetCorrectFrame();
 };
 
