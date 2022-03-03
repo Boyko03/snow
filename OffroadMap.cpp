@@ -140,15 +140,24 @@ bool OffroadMap::CheckPos(int x, int y)
 {
 	int tx = x / TILE;
 	int ty = (y / TILE + first_row) % rows;
-	Tile& tile = map[ty * width + tx];
+	Tile* tile = &map[ty * width + tx];
 
-	if (tile.object == Tile::Objects_t::None) return true;
-	else if (tile.object == Tile::Objects_t::Heart) {
+	if (tile->object == Tile::Objects_t::None) {
+		tile = &map[ty * width + tx + 1];
+		if (tile->object == Tile::Objects_t::None) return true;
+		else if (tile->object == Tile::Objects_t::Heart) {
+			player->health += 1;
+			*tile = tileFactory.getTile(tile->terrain, Tile::Objects_t::None);
+			return true;
+		}
+		return x % TILE < TILE / 2 || (x + 16) % TILE < tile->cx - tile->dx || y % TILE > tile->cy || y % TILE < tile->cy - tile->dy;
+	}
+	else if (tile->object == Tile::Objects_t::Heart) {
 		player->health += 1;
-		tile = tileFactory.getTile(tile.terrain, Tile::Objects_t::None);
+		*tile = tileFactory.getTile(tile->terrain, Tile::Objects_t::None);
 		return true;
 	}
-	return x % TILE > tile.cx + tile.dx || y % TILE > tile.cy || y % TILE < tile.cy - tile.dy;
+	return x % TILE > tile->cx + tile->dx || y % TILE > tile->cy || y % TILE < tile->cy - tile->dy;
 }
 
 void OffroadMap::Draw()
