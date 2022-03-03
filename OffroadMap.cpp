@@ -100,6 +100,9 @@ int OffroadMap::GetRandomPowerup()
 			index = 8;
 		else index = 0;
 		break;
+	case 1:
+		index = 9;
+		break;
 	default:
 		index = 0;
 	}
@@ -124,16 +127,22 @@ void OffroadMap::Move(float deltaTime)
 	int px = player->x - x + 8;
 	int py = player->y + 20 + current_position;
 
-	static int timer = -1;
-	if (CheckPos(px, py));
-	else if (!player->is_hit) {
-		player->is_hit = true;
-		player->health--;
-		player->speed = min(player->speed, 0.5f);
-		timer = 100;
+	static int hit_timer = -1, shield_timer = -1;
+	if (!player->has_shield) {
+		if (CheckPos(px, py)) {
+			if (player->has_shield) shield_timer = 100;
+		}
+		else if (!player->is_hit) {
+			player->is_hit = true;
+			player->health--;
+			player->speed = min(player->speed, 0.5f);
+			hit_timer = 100;
+		}
 	}
-	if (player->is_hit) player->Blink(timer);
-	if (player->is_hit && --timer <= -1) player->is_hit = false;
+	if (player->is_hit) player->Blink(hit_timer);
+	if (player->is_hit && --hit_timer <= -1) player->is_hit = false;
+	
+	if (player->has_shield && --shield_timer <= -1) player->has_shield = false;
 }
 
 bool OffroadMap::CheckPos(int x, int y)
@@ -145,19 +154,27 @@ bool OffroadMap::CheckPos(int x, int y)
 	if (tile->object == Tile::Objects_t::None) {
 		tile = &map[ty * width + tx + 1];
 		if (tile->object == Tile::Objects_t::None) return true;
-		else if (tile->object == Tile::Objects_t::Heart) {
-			player->health += 1;
-			*tile = tileFactory.getTile(tile->terrain, Tile::Objects_t::None);
-			return true;
-		}
+		else if (CheckForPowerups(tile)) return true;
 		return x % TILE < TILE / 2 || (x + 16) % TILE < tile->cx - tile->dx || y % TILE > tile->cy || y % TILE < tile->cy - tile->dy;
 	}
-	else if (tile->object == Tile::Objects_t::Heart) {
+	else if (CheckForPowerups(tile)) return true;
+	return x % TILE > tile->cx + tile->dx || y % TILE > tile->cy || y % TILE < tile->cy - tile->dy;
+}
+
+bool OffroadMap::CheckForPowerups(Tile* tile)
+{
+	if (tile->object == Tile::Objects_t::Heart) {
 		player->health += 1;
 		*tile = tileFactory.getTile(tile->terrain, Tile::Objects_t::None);
 		return true;
 	}
-	return x % TILE > tile->cx + tile->dx || y % TILE > tile->cy || y % TILE < tile->cy - tile->dy;
+	else if (tile->object == Tile::Objects_t::Shield) {
+		player->has_shield = true;
+		*tile = tileFactory.getTile(tile->terrain, Tile::Objects_t::None);
+		return true;
+	}
+
+	return false;
 }
 
 void OffroadMap::Draw()

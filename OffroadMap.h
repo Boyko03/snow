@@ -20,4 +20,6 @@ private:
 
 	void DrawPlayer();
 	void PrintScore();
+
+	bool CheckForPowerups(Tile* tile);
 };

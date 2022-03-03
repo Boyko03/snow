@@ -56,6 +56,14 @@ void Player::Draw(Surface& screen)
 	if (speed > 5.0f) speed = 5.0f;
 	x += (float)direction * (speed);
 	player.Draw(&screen, (int)x, (int)y);
+
+	if (has_shield) DrawShield(screen);
+}
+
+void Player::DrawShield(Surface& screen)
+{
+	static Surface shield = Surface("assets/s.png");
+	shield.BlendCopyTo(&screen, (int)x, (int)y);
 }
 
 void Player::Blink(int timer)

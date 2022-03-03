@@ -37,6 +37,7 @@ public:
 
 		// (Powerup) Offroad map only
 		Heart,
+		Shield,
 
 		// Normal map only
 		BlueFlag,

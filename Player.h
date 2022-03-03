@@ -12,6 +12,7 @@ public:
 	int score = 0;
 	float speed;
 	bool is_hit = false;
+	bool has_shield = false;
 
 	Player(float x, float y, int health = 3, float speed = 0.5f);
 
@@ -36,5 +37,7 @@ private:
 	void Accelerate();
 	void NormalPosition();
 	void SetCorrectFrame();
+
+	void DrawShield(Surface& screen);
 };
 

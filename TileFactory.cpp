@@ -29,6 +29,8 @@ Tile TileFactory::getTile(Tile::Terrains_t terrain, Tile::Objects_t object)
 	// Powerups
 	case Tile::Objects_t::Heart:
 		return Tile(5, 2, TILE / 2, TILE - 2, TILE / 2 - 2, TILE - 4, object, terrain);
+	case Tile::Objects_t::Shield:
+		return Tile(6, 2, TILE / 2, TILE - 2, TILE / 2 - 2, TILE - 4, object, terrain);
 	// Flags
 	case Tile::Objects_t::BlueFlag:
 		return Tile(6, 0, TILE / 2, 20, 6, 16, object, terrain, TILE, 2 * TILE);
