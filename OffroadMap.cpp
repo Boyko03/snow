@@ -15,22 +15,20 @@ OffroadMap::OffroadMap(int rows, int colls, Difficulty difficulty, Surface& scre
 
 void OffroadMap::AddRow(bool empty)
 {
-	vector<Tile> row;
+	if (first_row >= rows) first_row %= rows;
+	vector<Tile>& row = map[first_row];
 	// Left border
 	DrawBorder(row);
 
 	// Main map
 	if (empty)
 		for (int i = 0; i < colls; i++)
-			row.push_back(tileFactory.getTile(Tile::Terrains_t::Snow, Tile::Objects_t::None));
+			row[border_width + i] = tileFactory.getTile(Tile::Terrains_t::Snow, Tile::Objects_t::None);
 	else
 		for (int i = 0; i < colls; i++)
-			row.push_back(GenerateTile(i + border_width));
+			row[border_width + i] = GenerateTile(i + border_width);
 
-	// Right border
-	DrawBorder(row);
-
-	map.push_back(row);
+	first_row++;
 }
 
 Tile OffroadMap::GenerateTile(int column) {
@@ -38,19 +36,20 @@ Tile OffroadMap::GenerateTile(int column) {
 	Tile::Objects_t object = GetRandomObject();
 
 	// Check if tile above is tree in order to draw it correctly
-	size_t map_size = map.size();
 	Tile* tmp;
-	if (map_size > 0 && object == Tile::Objects_t::Tree) {
-		Tile::Objects_t above = map[map_size - 1][column].object;
+	int above_row = first_row > 0 ? first_row - 1 : rows - 1;
+	bool isAbove = map[above_row][column].ox >= 0;
+	if (isAbove && object == Tile::Objects_t::Tree) {
+		Tile::Objects_t above = map[above_row][column].object;
 		switch (above)
 		{
 		case Tile::Objects_t::Tree:
-			tmp = &map[map_size - 1][column];
-			map[map_size - 1][column] = tileFactory.getTile(tmp->terrain, Tile::Objects_t::TwoTrees);
+			tmp = &map[above_row][column];
+			map[above_row][column] = tileFactory.getTile(tmp->terrain, Tile::Objects_t::TwoTrees);
 			break;
 		default:
-			tmp = &map[map_size - 1][column];
-			map[map_size - 1][column] = tileFactory.getTile(tmp->terrain, Tile::Objects_t::TopOfTree);
+			tmp = &map[above_row][column];
+			map[above_row][column] = tileFactory.getTile(tmp->terrain, Tile::Objects_t::TopOfTree);
 			break;
 		}
 	}
@@ -93,7 +92,6 @@ void OffroadMap::Move(float deltaTime)
 {
 	if ((current_position += player->speed) >= TILE) {
 		current_position -= TILE;
-		DeleteRow();
 		AddRow();
 		player->score++;
 	}
@@ -122,7 +120,7 @@ void OffroadMap::Move(float deltaTime)
 bool OffroadMap::CheckPos(int x, int y)
 {
 	int tx = x / TILE;
-	int ty = y / TILE;
+	int ty = (y / TILE + first_row) % rows;
 	Tile tile = map[ty][tx];
 
 	if (tile.object == Tile::Objects_t::None) return true;
@@ -149,23 +147,23 @@ void OffroadMap::DrawPlayer()
 	int tx = (player->x - x) / TILE;
 	int ty = (player->y + current_position) / TILE;
 
-	Tile* tile = &map[ty][tx];
+	Tile* tile = &map[(ty + first_row) % rows][tx];
 	Tile::Objects_t None = Tile::Objects_t::None;
 
 	if ((tile->object == Tile::Objects_t::TopOfTree && current_position < TILE / 2 + 8)
 		|| tile->object == Tile::Objects_t::TwoTrees && tx >= border_width)
 		tile->DrawObjectOnly(x + tx * TILE, y, screen);
 
-	tile = &map[ty][tx + 1];
+	tile = &map[(ty + first_row) % rows][tx + 1];
 	if ((tile->object == Tile::Objects_t::TopOfTree && current_position < TILE / 2 + 8)
 		|| tile->object == Tile::Objects_t::TwoTrees && tx + 1 < colls + border_width)
 		tile->DrawObjectOnly(x + (tx + 1) * TILE, y, screen);
 
-	tile = &map[ty + 1][tx];
+	tile = &map[(ty + first_row + 1) % rows][tx];
 	if (tile->object != None && tx >= border_width)
 		tile->DrawObjectOnly(x + tx * TILE, y + TILE, screen);
 
-	tile = &map[ty + 1][tx + 1];
+	tile = &map[(ty + first_row + 1) % rows][tx + 1];
 	if (tile->object != None && tx + 1 < colls + border_width)
 		tile->DrawObjectOnly(x + (tx + 1) * TILE, y + TILE, screen);
 }

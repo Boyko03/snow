@@ -22,6 +22,7 @@ protected:
 	int colls;
 	int border_width = 3;
 	float current_position = 0;
+	int first_row = 0;
 	TileFactory tileFactory;
 	Player* player;
 	Surface& screen;

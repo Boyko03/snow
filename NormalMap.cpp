@@ -35,41 +35,38 @@ NormalMap::NormalMap(int rows, int colls, Difficulty difficulty, Surface& screen
 
 void NormalMap::AddRow(bool empty)
 {
-	vector<Tile> row;
-	// Left border
+	if (first_row >= rows) first_row %= rows;
+	vector<Tile>& row = map[first_row];
 	DrawBorder(row);
 
 	// Main map
 	if (empty)
 		for (int i = 0; i < colls; i++)
-			row.push_back(tileFactory.getTile(Tile::Terrains_t::Snow, Tile::Objects_t::None));
+			row[border_width + i] = tileFactory.getTile(Tile::Terrains_t::Snow, Tile::Objects_t::None);
 	else {
 		for (int i = 0; i < colls; i++) {
 			if (flags_counter > 0 && flags_counter % DISTANCE == 0) {
 				if (i == 2 * colls / 3 - 2 && flags_counter % (2 * DISTANCE) == 0)
-					row.push_back(tileFactory.getTile(Tile::Terrains_t::Snow, Tile::Objects_t::RedFlag));
+					row[border_width + i] = tileFactory.getTile(Tile::Terrains_t::Snow, Tile::Objects_t::RedFlag);
 				else if (i == colls / 3 + 2 && flags_counter % (2 * DISTANCE) != 0)
-					row.push_back(tileFactory.getTile(Tile::Terrains_t::Snow, Tile::Objects_t::BlueFlag));
+					row[border_width + i] = tileFactory.getTile(Tile::Terrains_t::Snow, Tile::Objects_t::BlueFlag);
 				else
-					row.push_back(tileFactory.getTile(Tile::Terrains_t::Snow, Tile::Objects_t::None));
+					row[border_width + i] = tileFactory.getTile(Tile::Terrains_t::Snow, Tile::Objects_t::None);
 			}
 			else if (flags_counter % DISTANCE == 0 && !finish_drawn)
-				row.push_back(tileFactory.getTile(Tile::Terrains_t::FinishLine, Tile::Objects_t::None));
+				row[border_width + i] = tileFactory.getTile(Tile::Terrains_t::FinishLine, Tile::Objects_t::None);
 			else
-				row.push_back(tileFactory.getTile(Tile::Terrains_t::Snow, Tile::Objects_t::None));
+				row[border_width + i] = tileFactory.getTile(Tile::Terrains_t::Snow, Tile::Objects_t::None);
 		}
 
 		flags_counter--;
 	}
 
-	// Right border
-	DrawBorder(row);
-
 	// Check for finish
 	if (!finish_drawn && flags_counter < 0 && flags_counter % DISTANCE == 0)
 		finish_drawn = true;
 
-	map.push_back(row);
+	first_row++;
 }
 
 void NormalMap::Move(float deltaTime)
@@ -78,7 +75,6 @@ void NormalMap::Move(float deltaTime)
 
 	if ((current_position += player->speed) >= TILE) {
 		current_position -= TILE;
-		DeleteRow();
 		AddRow();
 		player->score++;
 	}
@@ -117,7 +113,7 @@ void NormalMap::Move(float deltaTime)
 bool NormalMap::CheckPos(int x, int y)
 {
 	int tx = x / TILE;
-	int ty = y / TILE;
+	int ty = (y / TILE + first_row) % rows;
 	Tile tile = map[ty][tx];
 
 	if (tile.object == Tile::Objects_t::None) {
@@ -131,7 +127,7 @@ bool NormalMap::CheckPos(int x, int y)
 bool NormalMap::CheckFlag(int x, int y)
 {
 	int tx = x / TILE;
-	int ty = y / TILE;
+	int ty = (y / TILE + first_row) % rows;
 
 	int i = 0;
 	for (auto& tile : map[ty]) {
@@ -166,22 +162,22 @@ void NormalMap::DrawPlayer()
 	int tx = (player->x - x) / TILE;
 	int ty = (player->y + current_position) / TILE;
 
-	Tile* tile = &map[ty][tx];
+	Tile* tile = &map[(ty + first_row) % rows][tx];
 	Tile::Objects_t None = Tile::Objects_t::None;
 
-	tile = &map[ty + 1][tx];
+	tile = &map[(ty + first_row + 1) % rows][tx];
 	if (tile->object != None && tx >= border_width)
 		tile->DrawObjectOnly(x + tx * TILE, y, screen);
 
-	tile = &map[ty + 1][tx + 1];
+	tile = &map[(ty + first_row + 1) % rows][tx + 1];
 	if (tile->object != None && tx + 1 < colls + border_width)
 		tile->DrawObjectOnly(x + (tx + 1) * TILE, y, screen);
 
-	tile = &map[ty + 2][tx];
+	tile = &map[(ty + first_row + 2) % rows][tx];
 	if (tile->object != None && tx >= border_width)
 		tile->DrawObjectOnly(x + tx * TILE, y + TILE, screen);
 
-	tile = &map[ty + 2][tx + 1];
+	tile = &map[(ty + first_row + 2) % rows][tx + 1];
 	if (tile->object != None && tx + 1 < colls + border_width)
 		tile->DrawObjectOnly(x + (tx + 1) * TILE, y + TILE, screen);
 }

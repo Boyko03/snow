@@ -63,6 +63,8 @@ public:
 	/// <param name="tile_height">- tile height, default: TILE</param>
 	Tile(int ox, int oy, int cx, int cy, int dx, int dy, Objects_t object, Terrains_t terrain, int tile_width=TILE, int tile_height=TILE);
 
+	Tile() { ox = -1; };
+
 	int ox, oy;
 	int cx, cy, dx, dy;	// Collisions: x, y, delta x, delta y
 
