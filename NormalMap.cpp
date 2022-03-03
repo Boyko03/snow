@@ -130,7 +130,7 @@ bool NormalMap::CheckFlag(int x, int y)
 	int ty = (y / TILE + first_row) % rows;
 
 	for (int i = 0; i < colls; i++) {
-		Tile& tile = map[ty * width + border_width + i];
+		Tile& tile = map[ty * width + i];
 		if (tile.object == Tile::Objects_t::BlueFlag) {
 			return tx < i;
 		}

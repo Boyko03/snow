@@ -89,7 +89,7 @@ private:
 	void DrawPauseScreen();
 
 	// Prints score during endgame state
-	void PrintScore(Surface& buff);
+	void PrintScore();
 
 	std::vector<ScoreStat> WriteStatsScore();
 	std::vector<TimeStat> WriteStatsTime();

@@ -18,7 +18,6 @@ namespace Tmpl8
 	static Surface level_mode = Surface("assets/level-mode.png");
 	static Surface level_difficulty = Surface("assets/level-difficulty.png");
 
-	static Surface bg_end = Surface("assets/bg_end.png");
 	static Surface ranking = Surface("assets/ranking.png");
 	static Sprite top10sprite = Sprite(new Surface("assets/top10.png"), 1);
 
@@ -88,7 +87,7 @@ namespace Tmpl8
 				}
 				break;
 			case STATE::END_GAME:
-				PrintScore(bg_end);
+				PrintScore();
 				break;
 			default:
 				break;
@@ -474,7 +473,7 @@ namespace Tmpl8
 		btnQuit.Draw(screen, X + btnWidth + TILE, Y);
 	}
 
-	void Game::PrintScore(Surface& buff)
+	void Game::PrintScore()
 	{
 		/*static bool isFirst = true, prev = false;
 		int key = _kbhit();
