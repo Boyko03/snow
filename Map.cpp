@@ -55,13 +55,13 @@ void Map::AddBorder()
 	for (int i = 0; i < border_width; i++) {
 		int r = rand() % 4;
 		if (r == 0) row[i] = tileFactory.getTile(Tile::Terrains_t::Snow, Tile::Objects_t::None);
-		else row[i] = tileFactory.getTile(Tile::Terrains_t::Snow, Tile::Objects_t(r + 9)); // 10, 11, 12
+		else row[i] = tileFactory.getTile(Tile::Terrains_t::Snow, Tile::Objects_t(r + 10)); // 11, 12, 13
 	}
 
 	// Right border
 	for (int i = 0; i < border_width; i++) {
 		int r = rand() % 4;
 		if (r == 0) row[border_width + colls + i] = tileFactory.getTile(Tile::Terrains_t::Snow, Tile::Objects_t::None);
-		else row[border_width + colls + i] = tileFactory.getTile(Tile::Terrains_t::Snow, Tile::Objects_t(r + 9)); // 10, 11, 12
+		else row[border_width + colls + i] = tileFactory.getTile(Tile::Terrains_t::Snow, Tile::Objects_t(r + 10)); // 11, 12, 13
 	}
 }

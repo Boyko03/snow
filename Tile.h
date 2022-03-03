@@ -4,9 +4,6 @@
 #include <map>
 #include "surface.h"
 
-using namespace std;
-using namespace Tmpl8;
-
 constexpr int TILE = 32;
 
 class Tile
@@ -32,13 +29,16 @@ public:
 		Rock,
 		Log,
 		Bush,
-		Sign,
+		Sign,	// Not used yet
 
-		// Not Random Generated
+		// Not Randomly Generated
 		TopOfTree,
 		TwoTrees,
 
-		// Normal map
+		// (Powerup) Offroad map only
+		Heart,
+
+		// Normal map only
 		BlueFlag,
 		RedFlag,
 
@@ -66,23 +66,23 @@ public:
 	int ox, oy;
 	int cx, cy, dx, dy;	// Collisions: x, y, delta x, delta y
 
-	static map<Terrains_t, pair<int, int>> terrains;
+	static std::map<Terrains_t, std::pair<int, int>> terrains;
 
 	Terrains_t terrain;
 	Objects_t object;
 
 private:
-	static Surface tiles;
+	static Tmpl8::Surface tiles;
 	static int t_width;	// tilemap width
 	int tile_width, tile_height;
 
 public:
-	void Draw(int x, int y, Surface& screen);
-	void DrawBackground(int x, int y, Surface& screen);
-	void DrawForegound(int x, int y, Surface& screen);
-	void DrawObjectOnly(int x, int y, Surface& screen);
+	void Draw(int x, int y, Tmpl8::Surface& screen);
+	void DrawBackground(int x, int y, Tmpl8::Surface& screen);
+	void DrawForegound(int x, int y, Tmpl8::Surface& screen);
+	void DrawObjectOnly(int x, int y, Tmpl8::Surface& screen);
 
 private:
-	void DrawTile(int tx, int ty, Surface& screen, int x, int y, bool is_object=false);
+	void DrawTile(int tx, int ty, Tmpl8::Surface& screen, int x, int y, bool is_object=false);
 };
 

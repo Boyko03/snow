@@ -58,9 +58,9 @@ Tile OffroadMap::GenerateTile(int column) {
 
 Tile::Objects_t OffroadMap::GetRandomObject() {
 	// Difficulty:
-	// Easy		->		90% None, 10% Tree
-	// Medium	->		80% None, 10% Tree, 10% Rock
-	// Hard		->		70% None, 10% Tree, 10% Rock, 5% Log, 5% Bush
+	// Easy		->		89% None, 10% Tree, 1% Powerup
+	// Medium	->		79% None, 10% Tree, 10% Rock, 1% Powerup
+	// Hard		->		69% None, 10% Tree, 10% Rock, 5% Log, 5% Bush, 1% Powerup
 	int val = rand() % 100;
 	int index = 0;
 
@@ -68,23 +68,43 @@ Tile::Objects_t OffroadMap::GetRandomObject() {
 	{
 	case Difficulty::Easy:
 		if (val < 10) index = 1;		// Tree
-		else index = 0;					// None
+		else if (val != 99) index = 0;	// None
+		else index = GetRandomPowerup();// Powerup
 		break;
 	case Difficulty::Medium:
 		if (val < 10) index = 1;		// Tree
 		else if (val < 20) index = 2;	// Rock
-		else index = 0;					// None
+		else if (val != 99) index = 0;	// None
+		else index = GetRandomPowerup();// Powerup
 		break;
 	case Difficulty::Hard:
 		if (val < 10) index = 1;		// Tree
 		else if (val < 20) index = 2;	// Rock
 		else if (val < 25) index = 3;	// Log
 		else if (val < 30) index = 4;	// Bush
-		else index = 0;					// None
+		else if (val != 99) index = 0;	// None
+		else index = GetRandomPowerup();// Powerup
 		break;
 	}
 
 	return Tile::Objects_t(index);
+}
+
+int OffroadMap::GetRandomPowerup()
+{
+	int index, p = rand() % 3;
+
+	switch (p) {
+	case 0:
+		if (player->health < 3)
+			index = 8;
+		else index = 0;
+		break;
+	default:
+		index = 0;
+	}
+
+	return index;
 }
 
 void OffroadMap::Move(float deltaTime)
@@ -120,9 +140,14 @@ bool OffroadMap::CheckPos(int x, int y)
 {
 	int tx = x / TILE;
 	int ty = (y / TILE + first_row) % rows;
-	Tile tile = map[ty * width + tx];
+	Tile& tile = map[ty * width + tx];
 
 	if (tile.object == Tile::Objects_t::None) return true;
+	else if (tile.object == Tile::Objects_t::Heart) {
+		player->health += 1;
+		tile = tileFactory.getTile(tile.terrain, Tile::Objects_t::None);
+		return true;
+	}
 	return x % TILE > tile.cx + tile.dx || y % TILE > tile.cy || y % TILE < tile.cy - tile.dy;
 }
 

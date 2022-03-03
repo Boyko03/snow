@@ -10,6 +10,7 @@
 #include <Windows.h>
 #include <queue>
 #include <string>
+// #include <conio.h> _kbhit
 
 namespace Tmpl8
 {
@@ -211,6 +212,7 @@ namespace Tmpl8
 
 	void Game::KeyDown(int key)
 	{
+		// char _ = _getch();
 		// Left		->	80;	 4
 		// Right	->	79;  7
 		// Up 		->	82; 26
@@ -474,6 +476,20 @@ namespace Tmpl8
 
 	void Game::PrintScore(Surface& buff)
 	{
+		/*static bool isFirst = true, prev = false;
+		int key = _kbhit();
+		if (isFirst) {
+			if (key) prev = true;
+			isFirst = false;
+		}
+		else if (!key) prev = false;
+		else if (!prev && key) {
+			isFirst = true, prev = false;
+			Reset();
+			state = STATE::MAIN_SCREEN;
+			return;
+		}*/
+
 		static Surface copy = Surface(ScreenWidth, ScreenHeight);
 		if (makeCopy) screen->CopyTo(&copy, 0, 0), makeCopy = false;
 

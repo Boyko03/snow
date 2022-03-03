@@ -14,6 +14,7 @@ public:
 private:
 	Tile GenerateTile(int column);
 	Tile::Objects_t GetRandomObject();
+	int GetRandomPowerup();
 
 	bool CheckPos(int x, int y);
 
