@@ -36,8 +36,8 @@ NormalMap::NormalMap(int rows, int colls, Difficulty difficulty, Surface& screen
 void NormalMap::AddRow(bool empty)
 {
 	if (first_row >= rows) first_row %= rows;
-	vector<Tile>& row = map[first_row];
-	DrawBorder(row);
+	Tile* row = &map[first_row * width];
+	AddBorder();
 
 	// Main map
 	if (empty)
@@ -114,10 +114,10 @@ bool NormalMap::CheckPos(int x, int y)
 {
 	int tx = x / TILE;
 	int ty = (y / TILE + first_row) % rows;
-	Tile tile = map[ty][tx];
+	Tile tile = map[ty * width + tx];
 
 	if (tile.object == Tile::Objects_t::None) {
-		tile = map[ty][tx + 1];
+		tile = map[ty * width + tx + 1];
 		if (tile.object == Tile::Objects_t::None) return true;
 		return x % TILE < TILE / 2 || (x + 16) % TILE < tile.cx - tile.dx || y % TILE > tile.cy || y % TILE < tile.cy - tile.dy;
 	}
@@ -129,16 +129,16 @@ bool NormalMap::CheckFlag(int x, int y)
 	int tx = x / TILE;
 	int ty = (y / TILE + first_row) % rows;
 
-	int i = 0;
-	for (auto& tile : map[ty]) {
+	for (int i = 0; i < colls; i++) {
+		Tile& tile = map[ty * width + border_width + i];
 		if (tile.object == Tile::Objects_t::BlueFlag) {
 			return tx < i;
 		}
 		else if (tile.object == Tile::Objects_t::RedFlag) {
 			return tx >= i && CheckPos(x, y);
 		}
-		i++;
 	}
+
 	return true;
 }
 
@@ -162,22 +162,22 @@ void NormalMap::DrawPlayer()
 	int tx = (player->x - x) / TILE;
 	int ty = (player->y + current_position) / TILE;
 
-	Tile* tile = &map[(ty + first_row) % rows][tx];
+	Tile* tile = &map[((ty + first_row) % rows) * width + tx];
 	Tile::Objects_t None = Tile::Objects_t::None;
 
-	tile = &map[(ty + first_row + 1) % rows][tx];
+	tile = &map[((ty + first_row + 1) % rows) * width + tx];
 	if (tile->object != None && tx >= border_width)
 		tile->DrawObjectOnly(x + tx * TILE, y, screen);
 
-	tile = &map[(ty + first_row + 1) % rows][tx + 1];
+	tile = &map[((ty + first_row + 1) % rows) * width  + tx + 1];
 	if (tile->object != None && tx + 1 < colls + border_width)
 		tile->DrawObjectOnly(x + (tx + 1) * TILE, y, screen);
 
-	tile = &map[(ty + first_row + 2) % rows][tx];
+	tile = &map[((ty + first_row + 2) % rows) * width + tx];
 	if (tile->object != None && tx >= border_width)
 		tile->DrawObjectOnly(x + tx * TILE, y + TILE, screen);
 
-	tile = &map[(ty + first_row + 2) % rows][tx + 1];
+	tile = &map[((ty + first_row + 2) % rows) * width + tx + 1];
 	if (tile->object != None && tx + 1 < colls + border_width)
 		tile->DrawObjectOnly(x + (tx + 1) * TILE, y + TILE, screen);
 }

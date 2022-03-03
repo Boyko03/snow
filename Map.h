@@ -17,12 +17,13 @@ public:
 	};
 
 protected:
-	vector<vector<Tile>> map;
+	vector<Tile> map;
 	int rows;
 	int colls;
 	int border_width = 3;
 	float current_position = 0;
 	int first_row = 0;
+	int width;
 	TileFactory tileFactory;
 	Player* player;
 	Surface& screen;
@@ -33,7 +34,6 @@ public:
 	virtual ~Map();
 
 	virtual void AddRow(bool empty = false) = 0;
-	void DeleteRow();
 
 	virtual void Move(float deltaTime) = 0;
 
@@ -46,9 +46,8 @@ public:
 protected:
 	void DrawHearts();
 
-	void DrawBorder(vector<Tile>& row);
+	void AddBorder();
 
-	virtual void DrawTiles();
 	void DrawBackground();
 	void DrawForeground();
 };
