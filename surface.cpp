@@ -234,6 +234,17 @@ void Surface::SubBlendBar(int x1, int y1, int x2, int y2, Pixel c)
 	}
 }
 
+void Surface::Circle(float x, float y, float r, Pixel c)
+{
+	x += r, y += r;
+	for (int i = 0; i < 64; i++)
+	{
+		float r1 = (float)i * PI / 32, r2 = (float)(i + 1) * PI / 32;
+		Line(x - r * sinf(r1), y - r * cosf(r1),
+			x - r * sinf(r2), y - r * cosf(r2), c);
+	}
+}
+
 void Surface::CopyTo( Surface* a_Dst, int a_X, int a_Y )
 {
 	Pixel* dst = a_Dst->GetBuffer();

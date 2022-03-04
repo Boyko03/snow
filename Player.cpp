@@ -62,8 +62,10 @@ void Player::Draw(Surface& screen)
 
 void Player::DrawShield(Surface& screen)
 {
-	static Surface shield = Surface("assets/s.png");
+	static Surface shield = Surface("assets/shield.png");
 	shield.BlendCopyTo(&screen, (int)x, (int)y);
+
+	screen.Circle(x, y, shield.GetHeight() / 2, 0xff79f2f2);
 }
 
 void Player::Blink(int timer)
