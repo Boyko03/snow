@@ -2,10 +2,10 @@
 #include <cstdio>
 #include <Windows.h>
 
-Sprite Player::copy = Sprite(new Surface("assets/skier_32.png"), 6);
+Sprite Player::copy = Sprite(new Surface("assets/skier.png"), 6);
 
 Player::Player(float x, float y, int health, float speed) : x(x), y(y), health(health), speed(speed),
-	player(Sprite(new Surface("assets/skier_32.png"), 6))
+	player(Sprite(new Surface("assets/skier.png"), 6))
 {
 	player.SetFrame(2);
 }
@@ -57,15 +57,17 @@ void Player::Draw(Surface& screen)
 	x += (float)direction * (speed);
 	player.Draw(&screen, (int)x, (int)y);
 
-	if (has_shield) DrawShield(screen);
+	if (shield_timer > -1) DrawShield(screen), shield_timer--;
 }
 
 void Player::DrawShield(Surface& screen)
 {
 	static Surface shield = Surface("assets/shield.png");
-	shield.BlendCopyTo(&screen, (int)x, (int)y);
 
-	screen.Circle(x, y, shield.GetHeight() / 2, 0xff79f2f2);
+	if (shield_timer > 50 || shield_timer % 10 < 5) {
+		shield.BlendCopyTo(&screen, (int)x, (int)y);
+		screen.Circle(x, y, shield.GetHeight() / 2, 0xff79f2f2);
+	}
 }
 
 void Player::Blink(int timer)

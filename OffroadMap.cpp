@@ -128,21 +128,15 @@ void OffroadMap::Move(float deltaTime)
 	int py = player->y + 20 + current_position;
 
 	static int hit_timer = -1, shield_timer = -1;
-	if (!player->has_shield) {
-		if (CheckPos(px, py)) {
-			if (player->has_shield) shield_timer = 100;
-		}
-		else if (!player->is_hit) {
-			player->is_hit = true;
-			player->health--;
-			player->speed = min(player->speed, 0.5f);
-			hit_timer = 100;
-		}
+	if (CheckPos(px, py) || player->shield_timer > -1);
+	else if (!player->is_hit) {
+		player->is_hit = true;
+		player->health--;
+		player->speed = min(player->speed, 0.5f);
+		hit_timer = 100;
 	}
 	if (player->is_hit) player->Blink(hit_timer);
 	if (player->is_hit && --hit_timer <= -1) player->is_hit = false;
-	
-	if (player->has_shield && --shield_timer <= -1) player->has_shield = false;
 }
 
 bool OffroadMap::CheckPos(int x, int y)
@@ -169,7 +163,7 @@ bool OffroadMap::CheckForPowerups(Tile* tile)
 		return true;
 	}
 	else if (tile->object == Tile::Objects_t::Shield) {
-		player->has_shield = true;
+		player->shield_timer = 300;
 		*tile = tileFactory.getTile(tile->terrain, Tile::Objects_t::None);
 		return true;
 	}
@@ -185,6 +179,7 @@ void OffroadMap::Draw()
 
 	DrawHearts();
 	PrintScore();
+	PrintShieldTimer();
 }
 
 void OffroadMap::DrawPlayer()
@@ -227,4 +222,15 @@ void OffroadMap::PrintScore()
 	int width = 3;
 	int x = (scoreboard.GetWidth() - (int)strlen(buff) * 6 * width) / 2;
 	screen.Print(buff, 565 + x, 45, 0xffe8cd57, width);
+}
+
+void OffroadMap::PrintShieldTimer()
+{
+	if (player->shield_timer > -1) {
+		static Sprite shield = Sprite(new Surface("assets/shield_sprite.png"), 1);
+		shield.Draw(&screen, 16, 48);
+		char timer[5] = "";
+		sprintf(timer, "%d:%02d", player->shield_timer / 100, player->shield_timer % 100);
+		screen.Print(timer, shield.GetWidth() + 32, 52, 0xff00a2e8, 4);
+	}
 }

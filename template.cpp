@@ -304,7 +304,7 @@ int main( int argc, char **argv )
     /*if (!redirectIO())
         return 1;*/
 #endif
-	// printf( "application started.\n" );
+	printf( "application started.\n" );
 	SDL_Init( SDL_INIT_VIDEO );
 #ifdef ADVANCEDGL
 #ifdef FULLSCREEN
@@ -326,6 +326,12 @@ int main( int argc, char **argv )
 	SDL_Renderer* renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
 	SDL_Texture* frameBuffer = SDL_CreateTexture( renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, ScreenWidth, ScreenHeight );
 #endif
+	// Set icon
+	SDL_Surface* icon = SDL_LoadBMP("assets/icon.bmp");
+	SDL_SetWindowIcon(window, icon);
+	SDL_FreeSurface(icon);
+
+
 	int exitapp = 0;
 	game = new Game();
 	game->SetTarget( surface );

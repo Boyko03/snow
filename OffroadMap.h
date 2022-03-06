@@ -20,6 +20,7 @@ private:
 
 	void DrawPlayer();
 	void PrintScore();
+	void PrintShieldTimer();
 
 	bool CheckForPowerups(Tile* tile);
 };

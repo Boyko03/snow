@@ -22,12 +22,13 @@ namespace Tmpl8
 	static Sprite top10sprite = Sprite(new Surface("assets/top10.png"), 1);
 
 	static Sprite btnStart = Sprite(new Surface("assets/buttons/btn_start.png"), 2);
+	static Sprite enterName = Sprite(new Surface("assets/enter_name.png"), 1);
 	static Sprite btnSlalom = Sprite(new Surface("assets/buttons/btn_slalom.png"), 2);
 	static Sprite btnOffroadHard = Sprite(new Surface("assets/buttons/btn_offroad_hard.png"), 2);
 
-	static Sprite btnResume = Sprite(new Surface("assets/buttons/play-circle.png"), 1);
-	static Sprite btnRestart = Sprite(new Surface("assets/buttons/arrow-counterclockwise.png"), 1);
-	static Sprite btnQuit = Sprite(new Surface("assets/buttons/house-door.png"), 1);
+	static Sprite btnResume = Sprite(new Surface("assets/buttons/btn-play.png"), 1);
+	static Sprite btnRestart = Sprite(new Surface("assets/buttons/btn-restart.png"), 1);
+	static Sprite btnQuit = Sprite(new Surface("assets/buttons/home-igloo.png"), 1);
 
 	Map::Difficulty difficulty;
 
@@ -292,7 +293,9 @@ namespace Tmpl8
 				state = STATE::LEVEL_MODE;
 			}
 
-			if (mx > 263 && mx < 548 && my > 311 && my < 386) {
+			int x = (ScreenWidth - btnStart.GetWidth()) / 2;
+
+			if (mx > x && mx < x + btnStart.GetWidth() && my > 310 && my < 310 + btnStart.GetHeight()) {
 				if (isMouseDown) btnStart.SetFrame(1);
 				else state = STATE::LEVEL_MODE;
 			}
@@ -402,22 +405,21 @@ namespace Tmpl8
 	void Game::DrawHomeScreen()
 	{
 		home_screen.CopyTo(screen, 0, 0);
-		btnStart.Draw(screen, 262, 310);
+		btnStart.Draw(screen, (ScreenWidth - btnStart.GetWidth()) / 2, 310);
 
-		screen->Centre("Press Esc to exit", ScreenHeight - 2 * TILE, 0xff555555, 2);
+		screen->Centre("Press Esc to exit", ScreenHeight - (int)(3.5 * TILE), 0xff555555, 2);
 
 		if (strcmp(name, "")) {
-			screen->Box(256, 230, 556, 265, 0xff00ff00);
-			screen->Print(name, 265, 237, 0xff34eb43, 4);
+			screen->Print(name, 292, 230, 0xff00a2e8, 4);
 		}
 		else {
-			screen->Box(256, 230, 556, 265, 0xffff0000);
-			screen->Print("Name", 265, 237, 0xffcccccc, 4);
+			enterName.Draw(screen, (ScreenWidth - enterName.GetWidth()) / 2, 270);
 		}
+
 		static int br = 0;
-		int x = 265 + 4 * 6 * strlen(name);
+		int x = 292 + 4 * 6 * strlen(name);
 		if (br++ < 50)
-			screen->Line(x, 234, x, 261, 0xff010101);
+			screen->Line(x, 226, x, 251, 0xff010101);
 		if (br == 100) br = 0;
 	}
 
@@ -683,7 +685,7 @@ namespace Tmpl8
 		if (key == 42) {
 			if (name_index > 0) name[--name_index] = 0;
 		}
-		else if (name_index < 12) {
+		else if (name_index < 9) {
 			char c = GetCharByKey(key);
 			if (c) name[name_index++] = c;
 		}

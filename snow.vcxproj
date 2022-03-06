@@ -238,6 +238,7 @@
     <ClInclude Include="NormalMap.h" />
     <ClInclude Include="OffroadMap.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="surface.h" />
     <ClInclude Include="template.h" />
     <ClInclude Include="Tile.h" />
@@ -245,6 +246,9 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="_readme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="snow.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

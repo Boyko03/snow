@@ -49,6 +49,7 @@
     <ClInclude Include="OffroadMap.h">
       <Filter>map</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="template code">
@@ -65,5 +66,8 @@
     <Text Include="_readme.txt">
       <Filter>template code</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="snow.rc" />
   </ItemGroup>
 </Project>

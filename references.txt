@@ -1,4 +1,0 @@
-tileset 		- https://stealthix.itch.io/rpg-nature-tileset
-skier, scoreboard 	- http://floriangrosse.com/portfolio/dwarf-ski/
-trees			- https://opengameart.org/content/trees-mega-pack-cc-by-30-0
-shield			- https://www.svgrepo.com/svg/71862/shield
