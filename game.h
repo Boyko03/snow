@@ -30,6 +30,10 @@ private:
 	bool SELECT = false;
 	bool PAUSE = false;
 
+	// STATE: END_GAME
+	int gameOverKey = -1, counter = 0;
+	bool isGameOver = true;
+
 	char name[32] = "";
 	int name_index = 0;
 

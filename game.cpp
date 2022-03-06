@@ -135,8 +135,6 @@ namespace Tmpl8
 
 	void Game::KeyUp(int key)
 	{
-		static bool end = false;
-
 		// High priority
 		if (key == 70) {	// PrtScr
 			ScreenShot();
@@ -147,13 +145,7 @@ namespace Tmpl8
 			return;
 		}
 		else if (state == STATE::END_GAME) {
-			if (!end) end = true;
-			else {
-				Reset();
-				state = STATE::MAIN_SCREEN;
-				end = false;
-			}
-			return;
+			if (key == gameOverKey) gameOverKey = -1;
 		}
 
 		switch (key)
@@ -212,25 +204,16 @@ namespace Tmpl8
 
 	void Game::KeyDown(int key)
 	{
-		// char _ = _getch();
-		// Left		->	80;	 4
-		// Right	->	79;  7
-		// Up 		->	82; 26
-		// Down		->	81; 22
-		/*if (state == STATE::GAME && !PAUSE)
-			switch (key)
-			{
-			case 80: case 4:
-				player->TurnLeft(); break;
-			case 79: case 7:
-				player->TurnRight(); break;
-			case 82: case 26:
-				player->SlowDown(); break;
-			case 81: case 22:
-				player->Accelerate(); break;
-			default:
-				break;
-			}*/
+		if (state == STATE::END_GAME) {
+			if (isGameOver) gameOverKey = key;
+			else if (key != gameOverKey) {
+				Reset();
+				state = STATE::LEVEL_DIFFICULTY;
+				isGameOver = true;
+				gameOverKey = -1;
+				counter = 0;
+			}
+		}
 	}
 
 	void Game::ScreenShot()
@@ -393,7 +376,7 @@ namespace Tmpl8
 	{
 		if (!isMouseDown) {
 			Reset();
-			state = STATE::MAIN_SCREEN;
+			state = STATE::LEVEL_DIFFICULTY;
 		}
 	}
 
@@ -477,19 +460,7 @@ namespace Tmpl8
 
 	void Game::PrintScore()
 	{
-		/*static bool isFirst = true, prev = false;
-		int key = _kbhit();
-		if (isFirst) {
-			if (key) prev = true;
-			isFirst = false;
-		}
-		else if (!key) prev = false;
-		else if (!prev && key) {
-			isFirst = true, prev = false;
-			Reset();
-			state = STATE::MAIN_SCREEN;
-			return;
-		}*/
+		if (counter++) isGameOver = false;
 
 		static Surface copy = Surface(ScreenWidth, ScreenHeight);
 		if (makeCopy) screen->CopyTo(&copy, 0, 0), makeCopy = false;
