@@ -32,7 +32,7 @@ private:
 
 	// STATE: END_GAME
 	int gameOverKey = -1, counter = 0;
-	bool isGameOver = true;
+	bool isGameOver = true, gameOverKeyUp = false;
 
 	char name[32] = "";
 	int name_index = 0;

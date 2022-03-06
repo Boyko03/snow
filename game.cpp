@@ -160,9 +160,12 @@ namespace Tmpl8
 			ArrowKeyUpHandler(key); break;
 		case 40: case 44: // Enter, Space
 			if (state != STATE::GAME) {
-				btnSelect = true;
-				MouseUp(1);
-				selectorIndex = 0;
+				if (gameOverKeyUp) gameOverKeyUp = false;
+				else {
+					btnSelect = true;
+					MouseUp(1);
+					selectorIndex = 0;
+				}
 			}
 			break;
 		case 41:	// Esc
@@ -209,6 +212,7 @@ namespace Tmpl8
 			else if (key != gameOverKey) {
 				Reset();
 				state = STATE::LEVEL_DIFFICULTY;
+				if (key == 40 || key == 44) gameOverKeyUp = true;
 				isGameOver = true;
 				gameOverKey = -1;
 				counter = 0;
