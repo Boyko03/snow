@@ -209,7 +209,7 @@ namespace Tmpl8
 
 	void Game::KeyDown(int key)
 	{
-		if (state == STATE::END_GAME) {
+		if (state == STATE::END_GAME && key != 70 && key != 68) {
 			if (isGameOver) gameOverKey = key;
 			else if (key != gameOverKey) {
 				Reset();
