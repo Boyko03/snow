@@ -170,7 +170,9 @@ namespace Tmpl8
 			break;
 		case 41:	// Esc
 			if (state == STATE::LEVEL_MODE) state = STATE::MAIN_SCREEN;
-			else if (state == STATE::LEVEL_DIFFICULTY) state = STATE::LEVEL_MODE;
+			else if (state == STATE::LEVEL_DIFFICULTY)
+				if (gameOverKeyUp) gameOverKeyUp = false; 
+				else state = STATE::LEVEL_MODE;
 			else if (state == STATE::GAME) PAUSE = !PAUSE;
 			break;
 		default:
@@ -212,7 +214,7 @@ namespace Tmpl8
 			else if (key != gameOverKey) {
 				Reset();
 				state = STATE::LEVEL_DIFFICULTY;
-				if (key == 40 || key == 44) gameOverKeyUp = true;
+				if (key == 40 || key == 44 || key == 41) gameOverKeyUp = true;
 				isGameOver = true;
 				gameOverKey = -1;
 				counter = 0;
