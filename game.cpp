@@ -584,17 +584,18 @@ namespace Tmpl8
 
 			priority_queue<ScoreStat, vector<ScoreStat>, Compare> all_stats;
 			all_stats.push(new_stat);
-			if (file = fopen(filename.c_str(), "rb")) {
+			if (file = fopen(filename.c_str(), "r")) {
 				ScoreStat tmp;
-				for (int i = 0; fread(&tmp, sizeof(tmp), 1, file) == 1; i++) {
+				for (int i = 0; fscanf(file, "%[^:]: %d\n", tmp.name, &tmp.score) == 2; i++) {
 					all_stats.push(tmp);
 				}
 				fclose(file);
 			}
 
-			if (file = fopen(filename.c_str(), "wb")) {
+			if (file = fopen(filename.c_str(), "w")) {
 				while (!all_stats.empty()) {
-					fwrite(&all_stats.top(), sizeof(new_stat), 1, file);
+					ScoreStat stat = all_stats.top();
+					fprintf(file, "%s: %d\n", stat.name, stat.score);
 					if (top10.size() < 10) top10.push_back(all_stats.top());
 					all_stats.pop();
 				}
@@ -636,17 +637,18 @@ namespace Tmpl8
 
 			priority_queue<TimeStat, vector<TimeStat>, Compare> all_stats;
 			if (player->health > 0) all_stats.push(new_stat); // Save result only if player hasn't lost
-			if (file = fopen(filename.c_str(), "rb")) {
+			if (file = fopen(filename.c_str(), "r")) {
 				TimeStat tmp;
-				for (int i = 0; fread(&tmp, sizeof(tmp), 1, file) == 1; i++) {
+				for (int i = 0; fscanf(file, "%[^:]: %f\n", tmp.name, &tmp.score) == 2; i++) {
 					all_stats.push(tmp);
 				}
 				fclose(file);
 			}
 
-			if (file = fopen(filename.c_str(), "wb")) {
+			if (file = fopen(filename.c_str(), "w")) {
 				while (!all_stats.empty()) {
-					fwrite(&all_stats.top(), sizeof(new_stat), 1, file);
+					TimeStat stat = all_stats.top();
+					fprintf(file, "%s: %f\n", stat.name, stat.score);
 					if (top10.size() < 10) top10.push_back(all_stats.top());
 					all_stats.pop();
 				}

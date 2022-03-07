@@ -45,12 +45,12 @@ private:
 	} mode;
 
 	struct ScoreStat {
-		char name[13];
+		char name[10];
 		int score;
 	};
 
 	struct TimeStat {
-		char name[13];
+		char name[10];
 		float score;
 	};
 
