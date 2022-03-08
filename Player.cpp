@@ -66,7 +66,7 @@ void Player::DrawShield(Surface& screen)
 
 	if (shield_timer > 50 || shield_timer % 10 < 5) {
 		shield.BlendCopyTo(&screen, (int)x, (int)y);
-		screen.Circle(x, y, shield.GetHeight() / 2, 0xff79f2f2);
+		screen.Circle(x, y, (float)shield.GetHeight() / 2, 0xff79f2f2);
 	}
 }
 

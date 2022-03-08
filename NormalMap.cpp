@@ -4,7 +4,7 @@
 NormalMap::NormalMap(int rows, int colls, Difficulty difficulty, Surface& screen) :
 	Map(rows, colls, difficulty, screen)
 {
-	player = new Player(((colls + border_width) / 3 + 2) * TILE, 4 * TILE);
+	player = new Player(((float)(colls + border_width) / 3 + 2) * TILE, 4 * TILE);
 
 	switch (difficulty)
 	{
@@ -81,12 +81,12 @@ void NormalMap::Move(float deltaTime)
 
 	int x = screen.GetWidth() / 2 - (colls / 2 + border_width) * TILE;
 	// constraints
-	if (player->x < border_width * TILE + x) player->x = (border_width * TILE + x);
+	if (player->x < border_width * TILE + x) player->x = (float)(border_width * TILE + x);
 	if (player->x + TILE > screen.GetWidth() - (border_width * TILE + x))
-		player->x = (screen.GetWidth() - ((border_width + 1) * TILE + x));
+		player->x = (float)(screen.GetWidth() - ((border_width + 1) * TILE + x));
 
-	int px = player->x - x + 8;
-	int py = player->y + 20 + current_position;
+	int px = (int)player->x - x + 8;
+	int py = (int)(player->y + current_position) + 20;
 
 	static int timer = -1;
 	if (CheckPos(px, py));
@@ -157,10 +157,10 @@ void NormalMap::DrawPlayer()
 	player->Draw(screen);
 
 	int x = screen.GetWidth() / 2 - (colls / 2 + border_width) * TILE;
-	int y = player->y - current_position;
+	int y = (int)(player->y - current_position);
 
-	int tx = (player->x - x) / TILE;
-	int ty = (player->y + current_position) / TILE;
+	int tx = ((int)player->x - x) / TILE;
+	int ty = (int)((player->y + current_position) / TILE);
 
 	Tile* tile = &map[((ty + first_row) % rows) * width + tx];
 	Tile::Objects_t None = Tile::Objects_t::None;

@@ -17,17 +17,6 @@ Tile::Tile(int ox, int oy, int cx, int cy, int dx, int dy, Objects_t object, Ter
 {
 }
 
-void Tile::Draw(int x, int y, Tmpl8::Surface& screen)
-{
-    // Draw Terrain
-    int tx = terrains.at(terrain).first;
-    int ty = terrains.at(terrain).second;
-    DrawTile(tx, ty, screen, x, y);
-
-    // Draw Object
-    DrawObjectOnly(x, y - (tile_height - TILE), screen);
-}
-
 void Tile::DrawBackground(int x, int y, Tmpl8::Surface& screen)
 {
     int tx = terrains.at(terrain).first;

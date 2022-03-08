@@ -64,7 +64,7 @@ public:
 	/// <param name="tile_height">- tile height, default: TILE</param>
 	Tile(int ox, int oy, int cx, int cy, int dx, int dy, Objects_t object, Terrains_t terrain, int tile_width=TILE, int tile_height=TILE);
 
-	int ox, oy;
+	int ox, oy;			// x, y in tileset
 	int cx, cy, dx, dy;	// Collisions: x, y, delta x, delta y
 
 	static std::map<Terrains_t, std::pair<int, int>> terrains;
@@ -74,16 +74,27 @@ public:
 
 private:
 	static Tmpl8::Surface tiles;
-	static int t_width;	// tilemap width
-	int tile_width, tile_height;
+	static int t_width;				// tilemap width
+	int tile_width, tile_height;	// Can be different from TILE
 
 public:
-	void Draw(int x, int y, Tmpl8::Surface& screen);
+	// Draw background only
 	void DrawBackground(int x, int y, Tmpl8::Surface& screen);
+	// Draw foreground only
 	void DrawForegound(int x, int y, Tmpl8::Surface& screen);
+	// Draw object only
 	void DrawObjectOnly(int x, int y, Tmpl8::Surface& screen);
 
 private:
+	/// <summary>
+	/// Draw tile on screen
+	/// </summary>
+	/// <param name="tx">- tilemap X</param>
+	/// <param name="ty">- tilemap Y</param>
+	/// <param name="screen">- surface to draw tile on to</param>
+	/// <param name="x">- screen X</param>
+	/// <param name="y">- screen Y</param>
+	/// <param name="is_object">- if tile is object uses tile_width and tile_height else default TILE size</param>
 	void DrawTile(int tx, int ty, Tmpl8::Surface& screen, int x, int y, bool is_object=false);
 };
 

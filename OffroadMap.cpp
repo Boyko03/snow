@@ -4,7 +4,7 @@
 OffroadMap::OffroadMap(int rows, int colls, Difficulty difficulty, Surface& screen) :
 	Map(rows, colls, difficulty, screen)
 {
-	player = new Player(screen.GetWidth() / 2, 4 * TILE);
+	player = new Player((float)screen.GetWidth() / 2, 4 * TILE);
 
 	// empty rows at spawn point
 	for (int i = 0; i < rows / 2; i++)
@@ -120,12 +120,12 @@ void OffroadMap::Move(float deltaTime)
 
 	int x = screen.GetWidth() / 2 - (colls / 2 + border_width) * TILE;
 	// constraints
-	if (player->x < border_width * TILE + x) player->x = (border_width * TILE + x);
+	if (player->x < border_width * TILE + x) player->x = (float)(border_width * TILE + x);
 	if (player->x + TILE > screen.GetWidth() - (border_width * TILE + x))
-		player->x = (screen.GetWidth() - ((border_width + 1) * TILE + x));
+		player->x = (float)(screen.GetWidth() - ((border_width + 1) * TILE + x));
 
-	int px = player->x - x + 8;
-	int py = player->y + 20 + current_position;
+	int px = (int)player->x - x + 8;
+	int py = (int)(player->y + current_position) + 20;
 
 	static int hit_timer = -1, shield_timer = -1;
 	if (CheckPos(px, py) || player->shield_timer > -1);
@@ -186,28 +186,32 @@ void OffroadMap::DrawPlayer()
 {
 	player->Draw(screen);
 
-	int x = screen.GetWidth() / 2 - (colls / 2 + border_width) * TILE;
-	int y = player->y - current_position;
+	int x = screen.GetWidth() / 2 - (colls / 2 + border_width) * TILE;	// partially off-screen border
+	int y = (int)(player->y - current_position);						// screen y
 
-	int tx = (player->x - x) / TILE;
-	int ty = (player->y + current_position) / TILE;
+	int tx = (int)((player->x - x) / TILE);								// map x
+	int ty = (int)((player->y + current_position) / TILE);				// map y
 
-	Tile* tile = &map[((ty + first_row) % rows) * width + tx];
 	Tile::Objects_t None = Tile::Objects_t::None;
 
+	// Current Tile
+	Tile* tile = &map[((ty + first_row) % rows) * width + tx];
 	if ((tile->object == Tile::Objects_t::TopOfTree && current_position < TILE / 2 + 8)
 		|| tile->object == Tile::Objects_t::TwoTrees && tx >= border_width)
 		tile->DrawObjectOnly(x + tx * TILE, y, screen);
 
+	// Right
 	tile = &map[((ty + first_row) % rows) * width + tx + 1];
 	if ((tile->object == Tile::Objects_t::TopOfTree && current_position < TILE / 2 + 8)
 		|| tile->object == Tile::Objects_t::TwoTrees && tx + 1 < colls + border_width)
 		tile->DrawObjectOnly(x + (tx + 1) * TILE, y, screen);
 
+	// Bottom
 	tile = &map[((ty + first_row + 1) % rows) * width + tx];
 	if (tile->object != None && tx >= border_width)
 		tile->DrawObjectOnly(x + tx * TILE, y + TILE, screen);
 
+	// Bottom Right
 	tile = &map[((ty + first_row + 1) % rows) * width + tx + 1];
 	if (tile->object != None && tx + 1 < colls + border_width)
 		tile->DrawObjectOnly(x + (tx + 1) * TILE, y + TILE, screen);

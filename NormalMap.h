@@ -13,8 +13,12 @@ public:
 
 	bool IsWin() override;
 
+	/// <summary>
+	/// Get the total time in mm:ss:ms format
+	/// </summary>
 	char* GetTotalTime();
 
+	// Get total time in milliseconds
 	float GetTotalTimeMs() const { return total_time; }
 
 private:

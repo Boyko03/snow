@@ -9,7 +9,7 @@ Tile TileFactory::getTile(Tile::Terrains_t terrain, Tile::Objects_t object)
 	{
 	// Objects
 	case Tile::Objects_t::None:
-		return Tile(0, 1, TILE / 2, 25, 4, 7, object, terrain);
+		return Tile(0, 0, -1, -1, 0, 0, object, terrain);
 	case Tile::Objects_t::Tree:
 		return Tile(0, 1, TILE / 2, 25, 4, 7, object, terrain);
 	case Tile::Objects_t::Rock:
@@ -43,5 +43,8 @@ Tile TileFactory::getTile(Tile::Terrains_t terrain, Tile::Objects_t object)
 		return Tile(11, 0, -1, -1, 0, 0, object, terrain, 38, 2 * TILE);
 	case Tile::Objects_t::WinterTree:
 		return Tile(13, 0, -1, -1, 0, 0, object, terrain, 42, 2 * TILE);
+	default:
+		// Undefined
+		return Tile(0, 0, -1, -1, 0, 0, object, terrain);
 	}
 }

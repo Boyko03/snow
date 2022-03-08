@@ -406,7 +406,7 @@ namespace Tmpl8
 		}
 
 		static int br = 0;
-		int x = 292 + 4 * 6 * strlen(name);
+		float x = 292 + 4 * 6 * (float)strlen(name);
 		if (br++ < 50)
 			screen->Line(x, 226, x, 251, 0xff010101);
 		if (br == 100) br = 0;
