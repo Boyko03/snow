@@ -1,8 +1,12 @@
+![banner](./images/banner.png)
+
 # Snow
 
 *<p>BUas  intake assignment made in C++ with SDL2</p>*
 
 #### Download the game from: [https://boyko03.itch.io/snow](https://boyko03.itch.io/snow)
+
+---
 
 <h3>Features</h3>
 <p>
@@ -13,6 +17,9 @@ Ski game <br>
 - Powerups <br>
 - Ranking
 </p>
+
+---
+
 <h3>Controls:</h3>
 <ul>
 <li>A / Left Arrow to turn left</li>
@@ -24,3 +31,11 @@ Ski game <br>
 <li>PrtScr to take a screenshot</li>
 <li>Esc to exit / go back</li>
 </ul>
+
+---
+
+![home screen](./images/screenshot001.png)
+![modes](./images/screenshot002.png)
+![slalom](./images/screenshot003.png)
+![off-road](./images/screenshot004.png)
+![leaderboard](./images/screenshot005.png)
