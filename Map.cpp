@@ -25,7 +25,7 @@ void Map::DrawBackground()
 	for (int r = 0; r < rows; r++) {
 		for (int c = 0; c < colls + 2 * border_width; c++) {
 			int x = screen.GetWidth() / 2 - (colls / 2 - c + border_width) * TILE;
-			map[((first_row + r) % rows * width) + c].DrawBackground(x, r * TILE - (int)current_position, screen);
+			map[((first_row + r) % rows * width) + c].DrawBackground(x, (int)(r * TILE - current_position), screen);
 		}
 	}
 }
@@ -35,7 +35,7 @@ void Map::DrawForeground()
 	for (int r = 0; r < rows; r++) {
 		for (int c = 0; c < colls + 2 * border_width; c++) {
 			int x = screen.GetWidth() / 2 - (colls / 2 - c + border_width) * TILE;
-			map[((first_row + r) % rows * width) + c].DrawForegound(x, r * TILE - (int)current_position, screen);
+			map[((first_row + r) % rows * width) + c].DrawForegound(x, (int)(r * TILE - current_position), screen);
 		}
 	}
 }
