@@ -170,9 +170,11 @@ namespace Tmpl8
 			break;
 		case 41:	// Esc
 			if (state == STATE::LEVEL_MODE) state = STATE::MAIN_SCREEN;
-			else if (state == STATE::LEVEL_DIFFICULTY)
-				if (gameOverKeyUp) gameOverKeyUp = false; 
+			else if (state == STATE::LEVEL_DIFFICULTY) {
+				if (gameOverKeyUp) gameOverKeyUp = false;
 				else state = STATE::LEVEL_MODE;
+				selectorIndex = (int)mode;
+			}
 			else if (state == STATE::GAME) PAUSE = !PAUSE;
 			break;
 		default:
@@ -302,14 +304,16 @@ namespace Tmpl8
 		}
 
 		if (!isMouseDown) {
+			int width = btnSlalom.GetWidth();
+			int height = btnSlalom.GetHeight();
 			if (IsBackClicked())
 				state = STATE::MAIN_SCREEN;
-			else if (mx > 162 && mx < 350 && my > 192 && my < 345) {
+			else if (mx > 162 && mx < 162 + width && my > 158 && my < 158 + height) {
 				state = STATE::LEVEL_DIFFICULTY;
 				mode = Mode::Normal;
 				selectorIndex = 0;
 			}
-			else if (mx > 434 && mx < 623 && my > 192 && my < 345) {
+			else if (mx > 434 && mx < 434 + width && my > 158 && my < 158 + height) {
 				state = STATE::LEVEL_DIFFICULTY;
 				mode = Mode::OffRoad;
 				selectorIndex = 0;
@@ -327,21 +331,22 @@ namespace Tmpl8
 		}
 
 		if (!isMouseDown) {
+			int width = btnSlalom.GetWidth();
+			int height = btnSlalom.GetHeight();
 			if (IsBackClicked()) {
 				state = STATE::LEVEL_MODE;
 				selectorIndex = (int)mode;
 			}
-			// width: 203, height: 163
-			else if (mx > 92 && mx < 295 && my > 168 && my < 331) {
+			else if (mx > 78 && mx < 78 + width && my > 158 && my < 158 + height) {
 				difficulty = Map::Difficulty::Easy;
 				state = STATE::GAME;
 			}
 			// space between: 17
-			else if (mx > 312 && mx < 505 && my > 168 && my < 331) {
+			else if (mx > 78 + width + 17 && mx < 78 + 17 + 2 * width && my > 158 && my < 321) {
 				difficulty = Map::Difficulty::Medium;
 				state = STATE::GAME;
 			}
-			else if (mx > 532 && mx < 735 && my > 168 && my < 331) {
+			else if (mx > 78 + 2 * (width + 17) && mx < 78 + 3 * width + 34 && my > 158 && my < 321) {
 				difficulty = Map::Difficulty::Hard;
 				state = STATE::GAME;
 			}
@@ -388,7 +393,7 @@ namespace Tmpl8
 
 	bool Game::IsBackClicked()
 	{
-		return mx > 21 && mx < 100 && my > 21 && my < 100;
+		return mx > 64 && mx < 64 + btnRestart.GetWidth() && my > 32 && my < 32 + btnRestart.GetHeight();
 	}
 
 	void Game::DrawHomeScreen()
@@ -415,22 +420,27 @@ namespace Tmpl8
 	void Game::DrawModeSelectScreen()
 	{
 		level_mode.CopyTo(screen, 0, 0);
+		btnRestart.Draw(screen, 64, 32);
+
 		if (selectorIndex == 0)
 			btnSlalom.SetFrame(1), btnOffroadHard.SetFrame(0);
 		else
 			btnSlalom.SetFrame(0), btnOffroadHard.SetFrame(1);
 
-		btnSlalom.Draw(screen, 162, 192);
-		btnOffroadHard.Draw(screen, 434, 192);
+		btnSlalom.Draw(screen, 162, 158);
+		btnOffroadHard.Draw(screen, 434, 158);
 	}
 
 	void Game::DrawDifficultySelectScreen()
 	{
 		level_difficulty.CopyTo(screen, 0, 0);
+		btnRestart.Draw(screen, 64, 32);
+
+		int width = btnSlalom.GetWidth();
 		if (mode == Mode::Normal) {
 			for (int i = 0; i < 3; i++) {
 				if (i == selectorIndex) btnSlalom.SetFrame(1);
-				btnSlalom.Draw(screen, 92 + i * (btnSlalom.GetWidth() + 17), 168);
+				btnSlalom.Draw(screen, 78 + i * (width + 17), 158);
 				btnSlalom.SetFrame(0);
 			}
 		}
@@ -438,13 +448,13 @@ namespace Tmpl8
 			static Sprite btnOffroadEasy = Sprite(new Surface("assets/buttons/btn_offroad_easy.png"), 2);
 			static Sprite btnOffroadMedium = Sprite(new Surface("assets/buttons/btn_offroad_medium.png"), 2);
 			btnOffroadEasy.SetFrame(selectorIndex == 0);
-			btnOffroadEasy.Draw(screen, 92, 168);
+			btnOffroadEasy.Draw(screen, 78, 158);
 
 			btnOffroadMedium.SetFrame(selectorIndex == 1);
-			btnOffroadMedium.Draw(screen, 312, 168);
+			btnOffroadMedium.Draw(screen, 78 + width + 17, 158);
 
 			btnOffroadHard.SetFrame(selectorIndex == 2);
-			btnOffroadHard.Draw(screen, 532, 168);
+			btnOffroadHard.Draw(screen, 78 + 2 * (width + 17), 158);
 		}
 	}
 
