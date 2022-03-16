@@ -20,7 +20,8 @@ public:
 	/// Draw player on screen
 	/// </summary>
 	/// <param name="screen">- surface to draw player on to</param>
-	void Draw(Surface& screen);
+	/// <param name="elapsedTime">- elapsed time</param>
+	void Draw(Surface& screen, float elapsedTime);
 	/// <summary>
 	/// Fade player to red and back
 	/// </summary>
@@ -38,6 +39,8 @@ private:
 
 	int acceleration_counter = 0;	// Used to accelerate gradually
 	int current_frame = 2;			// current player sprite frame
+
+	float elapsedTime = 0;			// Elapsed time since last frame
 
 	/// <summary>
 	/// Set direction to left

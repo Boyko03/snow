@@ -72,9 +72,10 @@ void NormalMap::AddRow(bool empty)
 void NormalMap::Move(float deltaTime)
 {
 	total_time += deltaTime;
+	elapsedTime = deltaTime / 50 * 3;	// deltaTime / 1000 * 60
 
-	if ((current_position += player->speed) >= TILE) {
-		current_position -= TILE;
+	if ((current_position += player->speed * elapsedTime) >= TILE) {
+		current_position = (int)current_position % TILE;
 		AddRow();
 		player->score++;
 	}
@@ -154,7 +155,7 @@ void NormalMap::Draw()
 
 void NormalMap::DrawPlayer()
 {
-	player->Draw(screen);
+	player->Draw(screen, elapsedTime);
 
 	int x = screen.GetWidth() / 2 - (colls / 2 + border_width) * TILE;
 	int y = (int)(player->y - current_position);

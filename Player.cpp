@@ -1,6 +1,7 @@
 #include "Player.h"
 #include <cstdio>
 #include <Windows.h>
+#include <cmath>
 
 Sprite Player::copy = Sprite(new Surface("assets/skier.png"), 6);
 
@@ -13,20 +14,20 @@ Player::Player(float x, float y, int health, float speed) : x(x), y(y), health(h
 void Player::TurnLeft()
 {
 	//x -= speed + 1.0f;
-	speed *= 0.999f;
+	speed *= pow(0.999f, elapsedTime);
 	direction = Direction::Left;
 }
 
 void Player::TurnRight()
 {
 	//x += speed + 1.0f;
-	speed *= 0.999;
+	speed *= pow(0.999, elapsedTime);
 	direction = Direction::Right;
 }
 
 void Player::SlowDown()
 {
-	speed -= 0.1f;
+	speed -= 0.1f * elapsedTime;
 	if (speed < 0) speed = 0;
 	player.SetFrame(5);
 	direction = Direction::Normal;
@@ -34,9 +35,9 @@ void Player::SlowDown()
 
 void Player::Accelerate()
 {
-	if (acceleration_counter < 10) player.SetFrame(0), speed += 0.01f;
+	if (acceleration_counter < 10) player.SetFrame(0), speed += 0.01f * elapsedTime;
 	else if (acceleration_counter < 20) player.SetFrame(2);
-	else if (acceleration_counter < 30) player.SetFrame(1), speed += 0.01f;
+	else if (acceleration_counter < 30) player.SetFrame(1), speed += 0.01f * elapsedTime;
 	else acceleration_counter = 0;
 	acceleration_counter++;
 	direction = Direction::Normal;
@@ -49,12 +50,14 @@ void Player::NormalPosition()
 	direction = Direction::Normal;
 }
 
-void Player::Draw(Surface& screen)
+void Player::Draw(Surface& screen, float elapsedTime)
 {
+	this->elapsedTime = elapsedTime;
+
 	SetCorrectFrame();
-	speed += 0.001f;
+	speed += 0.001f * elapsedTime;
 	if (speed > 5.0f) speed = 5.0f;
-	x += (float)direction * (speed);
+	x += (float)direction * speed * elapsedTime;
 	player.Draw(&screen, (int)x, (int)y);
 
 	if (shield_timer > -1) DrawShield(screen), shield_timer--;
@@ -115,7 +118,7 @@ void Player::SetCorrectFrame()
 	if (GetAsyncKeyState(VK_LEFT) || GetAsyncKeyState(VkKeyScanA('a'))) {
 		TurnLeft();
 		if (GetAsyncKeyState(VK_DOWN) || GetAsyncKeyState(VkKeyScanA('s'))) {
-			speed += 0.001f;
+			speed += 0.001f * elapsedTime;
 		}
 		if (current_frame == 3) player.SetFrame(2);
 		else player.SetFrame(4);
@@ -123,7 +126,7 @@ void Player::SetCorrectFrame()
 	else if (GetAsyncKeyState(VK_RIGHT) || GetAsyncKeyState(VkKeyScanA('d'))) {
 		TurnRight();
 		if (GetAsyncKeyState(VK_DOWN) || GetAsyncKeyState(VkKeyScanA('s'))) {
-			speed += 0.001f;
+			speed += 0.001f * elapsedTime;
 		}
 		if (current_frame == 4) player.SetFrame(2);
 		else player.SetFrame(3);

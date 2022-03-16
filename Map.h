@@ -30,6 +30,10 @@ protected:
 	int first_row = 0;
 	// count of tiles in a row
 	int width;
+
+	// elapsed time since last frame
+	float elapsedTime = 0;
+
 	TileFactory tileFactory;
 	Player* player;
 	Surface& screen;
