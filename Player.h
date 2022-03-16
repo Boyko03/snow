@@ -12,7 +12,8 @@ public:
 	int score = 0;
 	float speed;
 	bool is_hit = false;
-	int shield_timer = -1; // shield is active if timer > 0
+	float hit_timer = -1;		// player blinks if timer > 0
+	float shield_timer = -1;	// shield is active if timer > 0
 
 	Player(float x, float y, int health = 3, float speed = 0.5f);
 

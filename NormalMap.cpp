@@ -77,7 +77,6 @@ void NormalMap::Move(float deltaTime)
 	if ((current_position += player->speed * elapsedTime) >= TILE) {
 		current_position = (int)current_position % TILE;
 		AddRow();
-		player->score++;
 	}
 
 	int x = screen.GetWidth() / 2 - (colls / 2 + border_width) * TILE;
@@ -89,16 +88,14 @@ void NormalMap::Move(float deltaTime)
 	int px = (int)player->x - x + 8;
 	int py = (int)(player->y + current_position) + 20;
 
-	static int timer = -1;
-	if (CheckPos(px, py));
-	else if (!player->is_hit) {
+	// Check for collisions
+	if (CheckPos(px, py) || player->hit_timer >= 0);
+	else {
 		player->is_hit = true;
 		player->health--;
 		player->speed = min(player->speed, 0.5f);
-		timer = 100;
+		player->hit_timer = 100;
 	}
-	if (player->is_hit) player->Blink(timer);
-	if (player->is_hit && --timer <= -1) player->is_hit = false;
 
 	// Check if misses flag
 	if (py % TILE < 16 && !CheckFlag(px, py)) {

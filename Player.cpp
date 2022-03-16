@@ -58,16 +58,21 @@ void Player::Draw(Surface& screen, float elapsedTime)
 	speed += 0.001f * elapsedTime;
 	if (speed > 5.0f) speed = 5.0f;
 	x += (float)direction * speed * elapsedTime;
+
+	// Blink
+	if (hit_timer >= 0) Blink((int)hit_timer), hit_timer -= elapsedTime;
+	else if (is_hit) Blink(0), is_hit = false;
 	player.Draw(&screen, (int)x, (int)y);
 
-	if (shield_timer > -1) DrawShield(screen), shield_timer--;
+	// Draw shield
+	if (shield_timer >= 0) DrawShield(screen), shield_timer -= elapsedTime;
 }
 
 void Player::DrawShield(Surface& screen)
 {
 	static Surface shield = Surface("assets/shield.png");
 
-	if (shield_timer > 50 || shield_timer % 10 < 5) {
+	if (shield_timer > 100 || (int)shield_timer % 20 < 10) {
 		shield.BlendCopyTo(&screen, (int)x, (int)y);
 		screen.Circle(x, y, (float)shield.GetHeight() / 2, 0xff79f2f2);
 	}
