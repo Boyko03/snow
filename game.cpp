@@ -94,7 +94,7 @@ namespace Tmpl8
 				break;
 			}
 
-			PrintFPS(deltaTime);
+			// PrintFPS(deltaTime);
 		}
 	}
 

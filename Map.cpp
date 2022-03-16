@@ -65,3 +65,9 @@ void Map::AddBorder()
 		else row[border_width + colls + i] = tileFactory.getTile(Tile::Terrains_t::Snow, Tile::Objects_t(r + 11)); // 12, 13, 14
 	}
 }
+
+void Map::ReduceCurrentPosition() {
+	while (current_position >= TILE) {
+		current_position -= TILE;
+	}
+}

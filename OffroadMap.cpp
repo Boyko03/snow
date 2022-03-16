@@ -115,7 +115,7 @@ void OffroadMap::Move(float deltaTime)
 	elapsedTime = deltaTime / 50 * 3;	// deltaTime / 1000 * 60
 
 	if ((current_position += player->speed * elapsedTime) >= TILE) {
-		current_position = (int)current_position % TILE;
+		ReduceCurrentPosition();
 		AddRow();
 		player->score++;
 	}

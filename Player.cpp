@@ -14,14 +14,14 @@ Player::Player(float x, float y, int health, float speed) : x(x), y(y), health(h
 void Player::TurnLeft()
 {
 	//x -= speed + 1.0f;
-	speed *= pow(0.999f, elapsedTime);
+	speed *= (float)pow(0.999f, elapsedTime);
 	direction = Direction::Left;
 }
 
 void Player::TurnRight()
 {
 	//x += speed + 1.0f;
-	speed *= pow(0.999, elapsedTime);
+	speed *= (float)pow(0.999, elapsedTime);
 	direction = Direction::Right;
 }
 

@@ -89,5 +89,10 @@ protected:
 	/// Draws map foreground
 	/// </summary>
 	void DrawForeground();
+
+	/// <summary>
+	/// Reduces current position if bigger than TILE
+	/// </summary>
+	void ReduceCurrentPosition();
 };
 
