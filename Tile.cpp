@@ -1,5 +1,6 @@
 #include "Tile.h"
 #include "surface.h"
+#include "template.h"
 
 Tmpl8::Surface Tile::tiles = Tmpl8::Surface("assets/IceTileset.png");
 int Tile::t_width = tiles.GetWidth();
@@ -12,8 +13,8 @@ std::map<Tile::Terrains_t, std::pair<int, int>> Tile::terrains{
         {Terrains_t::CobbleStone, std::pair<int, int>(3, 2)},
 };
 
-Tile::Tile(int ox, int oy, int cx, int cy, int dx, int dy, Objects_t object, Terrains_t terrain, int tile_width, int tile_height) :
-    ox(ox), oy(oy), cx(cx), cy(cy), dx(dx), dy(dy), object(object), terrain(terrain), tile_width(tile_width), tile_height(tile_height)
+Tile::Tile(int ox, int oy, BoxCollider collider, Objects_t object, Terrains_t terrain, int tile_width, int tile_height) :
+    ox(ox), oy(oy), collider(collider), object(object), terrain(terrain), tile_width(tile_width), tile_height(tile_height)
 {
 }
 
@@ -35,6 +36,8 @@ void Tile::DrawObjectOnly(int x, int y, Tmpl8::Surface& screen)
     // Draw Object If Exists
     if (object != Objects_t::None) {
         DrawTile(ox, oy, screen, x, y, true);
+        if (DEBUG && collider.min.x != -1)
+            screen.Box(x + (int)collider.min.x, y + (int)collider.min.y, x + (int)collider.max.x, y + (int)collider.max.y, 0xffff0000);
     }
 }
 

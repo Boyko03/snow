@@ -3,6 +3,7 @@
 #include <utility>
 #include <map>
 #include "surface.h"
+#include "BoxCollider.h"
 
 constexpr int TILE = 32;
 
@@ -62,10 +63,11 @@ public:
 	/// <param name="terrain">- Terrain</param>
 	/// <param name="tile_width">- tile width, default: TILE</param>
 	/// <param name="tile_height">- tile height, default: TILE</param>
-	Tile(int ox, int oy, int cx, int cy, int dx, int dy, Objects_t object, Terrains_t terrain, int tile_width=TILE, int tile_height=TILE);
+	Tile(int ox, int oy, BoxCollider collider, Objects_t object, Terrains_t terrain, int tile_width=TILE, int tile_height=TILE);
 
 	int ox, oy;			// x, y in tileset
 	int cx, cy, dx, dy;	// Collisions: x, y, delta x, delta y
+	BoxCollider collider;
 
 	static std::map<Terrains_t, std::pair<int, int>> terrains;
 

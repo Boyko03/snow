@@ -36,6 +36,9 @@ extern "C"
 #include "wglext.h"
 #endif
 
+// Show collision boxes
+bool DEBUG = false;
+
 namespace Tmpl8 { 
 
 double timer::inv_freq = 1;
@@ -330,7 +333,6 @@ int main( int argc, char **argv )
 	SDL_Surface* icon = SDL_LoadBMP("assets/icon.bmp");
 	SDL_SetWindowIcon(window, icon);
 	SDL_FreeSurface(icon);
-
 
 	int exitapp = 0;
 	game = new Game();

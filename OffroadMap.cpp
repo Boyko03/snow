@@ -1,10 +1,13 @@
 #include "OffroadMap.h"
 #include "TileFactory.h"
+#include "template.h"
+
+using namespace Tmpl8;
 
 OffroadMap::OffroadMap(int rows, int colls, Difficulty difficulty, Surface& screen) :
 	Map(rows, colls, difficulty, screen)
 {
-	player = new Player((float)screen.GetWidth() / 2, 4 * TILE);
+	player = new Player(vec2{ (float)screen.GetWidth() / 2, 4 * TILE });
 
 	// empty rows at spawn point
 	for (int i = 0; i < rows / 2; i++)
@@ -122,12 +125,12 @@ void OffroadMap::Move(float deltaTime)
 
 	int x = screen.GetWidth() / 2 - (colls / 2 + border_width) * TILE;
 	// constraints
-	if (player->x < border_width * TILE + x) player->x = (float)(border_width * TILE + x);
-	if (player->x + TILE > screen.GetWidth() - (border_width * TILE + x))
-		player->x = (float)(screen.GetWidth() - ((border_width + 1) * TILE + x));
+	if (player->pos.x < border_width * TILE + x) player->pos.x = (float)(border_width * TILE + x);
+	if (player->pos.x + TILE > screen.GetWidth() - (border_width * TILE + x))
+		player->pos.x = (float)(screen.GetWidth() - ((border_width + 1) * TILE + x));
 
-	int px = (int)player->x - x + 8;
-	int py = (int)(player->y + current_position) + 20;
+	int px = (int)player->pos.x - x;
+	int py = (int)(player->pos.y + current_position + player->collider.min.y);
 
 	// Check for collisions
 	if (CheckPos(px, py) || player->shield_timer >= 0 || player->hit_timer >= 0);
@@ -145,14 +148,35 @@ bool OffroadMap::CheckPos(int x, int y)
 	int ty = (y / TILE + first_row) % rows;
 	Tile* tile = &map[ty * width + tx];
 
+	BoxCollider player_box(player->collider.min + player->pos, player->collider.max + player->pos);
+	BoxCollider tile_box(tile->collider.min, tile->collider.max);
+	float tile_x = (float)(screen.GetWidth() / 2 - (colls / 2 - tx + border_width) * TILE);
+	float tile_y = (y / TILE) * TILE - current_position;
+	tile_box.min += {tile_x, tile_y};
+	tile_box.max += {tile_x, tile_y};
+
+	if (DEBUG) {
+		screen.Box((int)player_box.min.x, (int)player_box.min.y, (int)player_box.max.x, (int)player_box.max.y, 0xff00ff00);
+		if (tile->collider.min.x != -1)
+			screen.Box((int)tile_box.min.x, (int)tile_box.min.y, (int)tile_box.max.x, (int)tile_box.max.y, 0xff00ffff);
+	}
+
 	if (tile->object == Tile::Objects_t::None) {
 		tile = &map[ty * width + tx + 1];
 		if (tile->object == Tile::Objects_t::None) return true;
-		else if (CheckForPowerups(tile)) return true;
-		return x % TILE < TILE / 2 || (x + 16) % TILE < tile->cx - tile->dx || y % TILE > tile->cy || y % TILE < tile->cy - tile->dy;
+		// Set tile collision box top left corner
+		tile_box.min.x = tile->collider.min.x + tile_x + TILE;
+		tile_box.min.y = tile->collider.min.y + tile_y;
+		// Set tile collision box bottom right corner
+		tile_box.max.x = tile->collider.max.x + tile_x + TILE;
+		tile_box.max.y = tile->collider.max.y + tile_y;
+		if (DEBUG && tile->collider.min.x != -1)
+			screen.Box((int)tile_box.min.x, (int)tile_box.min.y, (int)tile_box.max.x, (int)tile_box.max.y, 0xff0000ff);
+		if (player_box.Collides(tile_box)) return CheckForPowerups(tile);
 	}
-	else if (CheckForPowerups(tile)) return true;
-	return x % TILE > tile->cx + tile->dx || y % TILE > tile->cy || y % TILE < tile->cy - tile->dy;
+	else if (player_box.Collides(tile_box)) return CheckForPowerups(tile);
+
+	return true;
 }
 
 bool OffroadMap::CheckForPowerups(Tile* tile)
@@ -187,10 +211,10 @@ void OffroadMap::DrawPlayer()
 	player->Draw(screen, elapsedTime);
 
 	int x = screen.GetWidth() / 2 - (colls / 2 + border_width) * TILE;	// partially off-screen border
-	int y = (int)(player->y - current_position);						// screen y
+	int y = (int)(player->pos.y - current_position);						// screen y
 
-	int tx = (int)((player->x - x) / TILE);								// map x
-	int ty = (int)((player->y + current_position) / TILE);				// map y
+	int tx = (int)((player->pos.x - x) / TILE);								// map x
+	int ty = (int)((player->pos.y + current_position) / TILE);				// map y
 
 	Tile::Objects_t None = Tile::Objects_t::None;
 

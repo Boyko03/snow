@@ -1,4 +1,6 @@
 #include "surface.h"
+#include "template.h"
+#include "BoxCollider.h"
 #pragma once
 
 using namespace Tmpl8;
@@ -6,8 +8,9 @@ using namespace Tmpl8;
 class Player
 {
 public:
-	float x;
-	float y;
+	vec2 pos;
+	BoxCollider collider;
+
 	int health;
 	int score = 0;
 	float speed;
@@ -15,7 +18,7 @@ public:
 	float hit_timer = -1;		// player blinks if timer > 0
 	float shield_timer = -1;	// shield is active if timer > 0
 
-	Player(float x, float y, int health = 3, float speed = 0.5f);
+	Player(vec2 pos, int health = 3, float speed = 0.5f);
 
 	/// <summary>
 	/// Draw player on screen

@@ -80,9 +80,8 @@ namespace Tmpl8
 						map = new OffroadMap(20, 20, difficulty, *screen);
 				}
 				player = map->GetPlayer();
-				screen->Clear(0);
-				map->Move(deltaTime);
 				map->Draw();
+				map->Move(deltaTime);
 				if (player->health == 0 || map->IsWin()) {
 					state = STATE::END_GAME;
 				}
@@ -94,7 +93,7 @@ namespace Tmpl8
 				break;
 			}
 
-			// PrintFPS(deltaTime);
+			if (DEBUG) PrintFPS(deltaTime);
 		}
 	}
 
@@ -136,8 +135,12 @@ namespace Tmpl8
 	void Game::KeyUp(int key)
 	{
 		// High priority
-		if (key == 70) {	// PrtScr
+		if (key == 70) {		// PrtScr
 			ScreenShot();
+			return;
+		}
+		else if (key == 62) {	// f5
+			DEBUG = !DEBUG;
 			return;
 		}
 		else if (key == 68) {	// f11
@@ -705,6 +708,6 @@ namespace Tmpl8
 
 		char FPS[12];
 		sprintf(FPS, "FPS: %.2f", fps);
-		screen->Print(FPS, 10, 10, 0x2e9121, 2);
+		screen->Print(FPS, 22, 5, 0xff852121, 2);
 	}
 };

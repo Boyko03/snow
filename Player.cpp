@@ -5,8 +5,9 @@
 
 Sprite Player::copy = Sprite(new Surface("assets/skier.png"), 6);
 
-Player::Player(float x, float y, int health, float speed) : x(x), y(y), health(health), speed(speed),
-	player(Sprite(new Surface("assets/skier.png"), 6))
+Player::Player(vec2 pos, int health, float speed) : pos(pos), health(health), speed(speed),
+	player(Sprite(new Surface("assets/skier.png"), 6)),
+	collider(BoxCollider(vec2(12, 17), vec2(20, 25)))
 {
 	player.SetFrame(2);
 }
@@ -57,12 +58,15 @@ void Player::Draw(Surface& screen, float elapsedTime)
 	SetCorrectFrame();
 	speed += 0.001f * elapsedTime;
 	if (speed > 5.0f) speed = 5.0f;
-	x += (float)direction * speed * elapsedTime;
+	pos.x += (float)direction * speed * elapsedTime;
 
 	// Blink
 	if (hit_timer >= 0) Blink((int)hit_timer), hit_timer -= elapsedTime;
 	else if (is_hit) Blink(0), is_hit = false;
-	player.Draw(&screen, (int)x, (int)y);
+	player.Draw(&screen, (int)pos.x, (int)pos.y);
+	if (DEBUG)
+		screen.Box((int)(pos.x + collider.min.x), (int)(pos.y + collider.min.y),
+			(int)(pos.x + collider.max.x), (int)(pos.y + collider.max.y), 0xffff0000);
 
 	// Draw shield
 	if (shield_timer >= 0) DrawShield(screen), shield_timer -= elapsedTime;
@@ -73,8 +77,8 @@ void Player::DrawShield(Surface& screen)
 	static Surface shield = Surface("assets/shield.png");
 
 	if (shield_timer > 100 || (int)shield_timer % 20 < 10) {
-		shield.BlendCopyTo(&screen, (int)x, (int)y);
-		screen.Circle(x, y, (float)shield.GetHeight() / 2, 0xff79f2f2);
+		shield.BlendCopyTo(&screen, (int)pos.x, (int)pos.y);
+		screen.Circle(pos.x, pos.y, (float)shield.GetHeight() / 2, 0xff79f2f2);
 	}
 }
 
