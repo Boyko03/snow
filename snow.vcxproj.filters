@@ -24,6 +24,7 @@
     <ClCompile Include="OffroadMap.cpp">
       <Filter>map</Filter>
     </ClCompile>
+    <ClCompile Include="BoxCollider.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h" />
@@ -50,6 +51,7 @@
       <Filter>map</Filter>
     </ClInclude>
     <ClInclude Include="resource.h" />
+    <ClInclude Include="BoxCollider.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="template code">

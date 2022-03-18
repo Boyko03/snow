@@ -222,6 +222,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="NormalMap.cpp" />
@@ -233,6 +234,7 @@
     <ClCompile Include="TileFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="NormalMap.h" />
