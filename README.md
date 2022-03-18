@@ -8,19 +8,20 @@
 
 ---
 
-<h3>Features</h3>
+## Features
 <p>
 Ski game <br>
 - Two modes: Slalom (finite) and Off-road (endless) <br>
 - Three difficulties: easy, medium and hard <br>
 - Randomly generated terrain <br>
 - Powerups <br>
-- Ranking
+- Ranking <br>
+- Debug mode
 </p>
 
 ---
 
-<h3>Controls:</h3>
+## Controls
 <ul>
 <li>A / Left Arrow to turn left</li>
 <li>D / Right Arrow to turn right</li>
@@ -28,6 +29,7 @@ Ski game <br>
 <li>Hold S / Down Arrow to accelerate</li><li>P to pause</li>
 <li>Enter / Space for select</li>
 <li>F11 for fullscreen</li>
+<li>F5 for debug mode</li>
 <li>PrtScr to take a screenshot</li>
 <li>Esc to exit / go back</li>
 </ul>
@@ -39,3 +41,4 @@ Ski game <br>
 ![slalom](./images/screenshot003.png)
 ![off-road](./images/screenshot004.png)
 ![leaderboard](./images/screenshot005.png)
+![debug-mode](./images/collision-box.png)
