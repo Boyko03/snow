@@ -155,12 +155,6 @@ bool OffroadMap::CheckPos(int x, int y)
 	tile_box.min += {tile_x, tile_y};
 	tile_box.max += {tile_x, tile_y};
 
-	if (DEBUG) {
-		screen.Box((int)player_box.min.x, (int)player_box.min.y, (int)player_box.max.x, (int)player_box.max.y, 0xff00ff00);
-		if (tile->collider.min.x != -1)
-			screen.Box((int)tile_box.min.x, (int)tile_box.min.y, (int)tile_box.max.x, (int)tile_box.max.y, 0xff00ffff);
-	}
-
 	if (tile->object == Tile::Objects_t::None) {
 		tile = &map[ty * width + tx + 1];
 		if (tile->object == Tile::Objects_t::None) return true;
@@ -170,8 +164,6 @@ bool OffroadMap::CheckPos(int x, int y)
 		// Set tile collision box bottom right corner
 		tile_box.max.x = tile->collider.max.x + tile_x + TILE;
 		tile_box.max.y = tile->collider.max.y + tile_y;
-		if (DEBUG && tile->collider.min.x != -1)
-			screen.Box((int)tile_box.min.x, (int)tile_box.min.y, (int)tile_box.max.x, (int)tile_box.max.y, 0xff0000ff);
 		if (player_box.Collides(tile_box)) return CheckForPowerups(tile);
 	}
 	else if (player_box.Collides(tile_box)) return CheckForPowerups(tile);
@@ -239,6 +231,9 @@ void OffroadMap::DrawPlayer()
 	tile = &map[((ty + first_row + 1) % rows) * width + tx + 1];
 	if (tile->object != None && tx + 1 < colls + border_width)
 		tile->DrawObjectOnly(x + (tx + 1) * TILE, y + TILE, screen);
+
+	// Draw collision box
+	if (DEBUG) player->DrawCollisionBox(screen);
 }
 
 void OffroadMap::PrintScore()

@@ -64,9 +64,6 @@ void Player::Draw(Surface& screen, float elapsedTime)
 	if (hit_timer >= 0) Blink((int)hit_timer), hit_timer -= elapsedTime;
 	else if (is_hit) Blink(0), is_hit = false;
 	player.Draw(&screen, (int)pos.x, (int)pos.y);
-	if (DEBUG)
-		screen.Box((int)(pos.x + collider.min.x), (int)(pos.y + collider.min.y),
-			(int)(pos.x + collider.max.x), (int)(pos.y + collider.max.y), 0xffff0000);
 
 	// Draw shield
 	if (shield_timer >= 0) DrawShield(screen), shield_timer -= elapsedTime;
@@ -80,6 +77,12 @@ void Player::DrawShield(Surface& screen)
 		shield.BlendCopyTo(&screen, (int)pos.x, (int)pos.y);
 		screen.Circle(pos.x, pos.y, (float)shield.GetHeight() / 2, 0xff79f2f2);
 	}
+}
+
+void Player::DrawCollisionBox(Surface& screen)
+{
+	screen.Box((int)(pos.x + collider.min.x), (int)(pos.y + collider.min.y),
+		(int)(pos.x + collider.max.x), (int)(pos.y + collider.max.y), 0xff00ff00);
 }
 
 void Player::Blink(int timer)

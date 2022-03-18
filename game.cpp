@@ -80,8 +80,8 @@ namespace Tmpl8
 						map = new OffroadMap(20, 20, difficulty, *screen);
 				}
 				player = map->GetPlayer();
-				map->Draw();
 				map->Move(deltaTime);
+				map->Draw();
 				if (player->health == 0 || map->IsWin()) {
 					state = STATE::END_GAME;
 				}
@@ -153,14 +153,16 @@ namespace Tmpl8
 
 		switch (key)
 		{
-		case 19: // P
+		case 19:				// P
 			if (state == STATE::GAME)
 				PAUSE = !PAUSE;
 			else if (state == STATE::MAIN_SCREEN) EnterName(key);
 			break;
-		case 79: case 80: case 81: case 82:
-		case 4: case 7: case 26: case 22:
-			ArrowKeyUpHandler(key); break;
+		case 79: case 80: case 81: case 82:		// Arrows
+		case 4: case 7: case 26: case 22:		// WASD
+			if (gameOverKeyUp) gameOverKeyUp = false;
+			else ArrowKeyUpHandler(key);
+			break;
 		case 40: case 44: // Enter, Space
 			if (state != STATE::GAME) {
 				if (gameOverKeyUp) gameOverKeyUp = false;
@@ -214,12 +216,16 @@ namespace Tmpl8
 
 	void Game::KeyDown(int key)
 	{
-		if (state == STATE::END_GAME && key != 70 && key != 68) {
+		if (state == STATE::END_GAME && key != 70 && key != 62 && key != 68) {
 			if (isGameOver) gameOverKey = key;
 			else if (key != gameOverKey) {
 				Reset();
 				state = STATE::LEVEL_DIFFICULTY;
-				if (key == 40 || key == 44 || key == 41) gameOverKeyUp = true;
+				if (key == 40 || key == 44 || key == 41 ||				// Enter, Space, Esc
+					(key >= 79 && key <= 82) ||							// Arrows
+					key == 4 || key == 7 || key == 26 || key == 22) {	// WASD
+					gameOverKeyUp = true;
+				}
 				isGameOver = true;
 				gameOverKey = -1;
 				counter = 0;
@@ -623,7 +629,6 @@ namespace Tmpl8
 	}
 
 	std::vector<Game::TimeStat> Game::WriteStatsTime()
-	// void Game::WriteStatsTime()
 	{
 		string filename = "stats\\time_";
 		if (difficulty == Map::Difficulty::Easy) filename += "easy.txt";

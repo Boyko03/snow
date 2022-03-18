@@ -23,9 +23,16 @@ public:
 	/// <summary>
 	/// Draw player on screen
 	/// </summary>
-	/// <param name="screen">- surface to draw player on to</param>
+	/// <param name="screen">- surface to draw player onto</param>
 	/// <param name="elapsedTime">- elapsed time</param>
 	void Draw(Surface& screen, float elapsedTime);
+
+	/// <summary>
+	/// Draws collision box on screen
+	/// </summary>
+	/// <param name="screen">- surface to draw collision box onto</param>
+	void DrawCollisionBox(Surface& screen);
+
 	/// <summary>
 	/// Fade player to red and back
 	/// </summary>
