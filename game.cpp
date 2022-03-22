@@ -528,7 +528,7 @@ namespace Tmpl8
 				screen->Print(stat.name, 5 * TILE + 10, y1, color, 3);
 
 				char score[15];
-				sprintf(score, "%*c%*d", 10, ' ', 4, stat.score);
+				sprintf(score, "%*d", 14, stat.score);
 				screen->Print(score, 440, y1, color, 3);
 				i++;
 			}
@@ -565,7 +565,15 @@ namespace Tmpl8
 				int minutes = total_time / 60000;
 				int seconds = total_time % 60000 / 1000;
 				int millis = total_time % 1000 / 10;
-				sprintf(score, "%*c%02d:%02d:%02d", 6, ' ', minutes, seconds, millis);
+				
+				char tmp_minutes[15];
+				itoa(minutes, tmp_minutes, 10);
+				if (strlen(tmp_minutes) > 2) {
+					sprintf(score, "%*d:%02d:%02d", 8, minutes, seconds, millis);
+				}
+				else {
+					sprintf(score, "%*c%02d:%02d:%02d", 6, ' ', minutes, seconds, millis);
+				}
 				screen->Print(score, 440, y1, color, 3);
 				i++;
 			}
