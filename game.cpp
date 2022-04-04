@@ -567,7 +567,7 @@ namespace Tmpl8
 				int millis = total_time % 1000 / 10;
 				
 				char tmp_minutes[15];
-				itoa(minutes, tmp_minutes, 10);
+				_itoa(minutes, tmp_minutes, 10);
 				if (strlen(tmp_minutes) > 2) {
 					sprintf(score, "%*d:%02d:%02d", 8, minutes, seconds, millis);
 				}

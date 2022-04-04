@@ -4,8 +4,8 @@
 
 using namespace Tmpl8;
 
-Map::Map(int rows, int colls, Difficulty difficulty, Surface& screen) : rows(rows), colls(colls),
-	difficulty(difficulty), screen(screen)
+Map::Map(int rows, int colls, Difficulty difficulty, Surface& screen) :
+	rows(rows), colls(colls), difficulty(difficulty), screen(screen)
 {
 	width = colls + 2 * border_width;
 	map.assign(rows * width, tileFactory.getTile(Tile::Terrains_t::Snow, Tile::Objects_t::None));
