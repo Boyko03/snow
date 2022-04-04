@@ -11,7 +11,7 @@ class Map
 {
 public:
 	enum class Difficulty {
-		Easy = 0,
+		Easy,
 		Medium,
 		Hard
 	};

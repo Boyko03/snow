@@ -66,7 +66,6 @@ public:
 	Tile(int ox, int oy, BoxCollider collider, Objects_t object, Terrains_t terrain, int tile_width=TILE, int tile_height=TILE);
 
 	int ox, oy;			// x, y in tileset
-	int cx, cy, dx, dy;	// Collisions: x, y, delta x, delta y
 	BoxCollider collider;
 
 	static std::map<Terrains_t, std::pair<int, int>> terrains;
@@ -75,7 +74,7 @@ public:
 	Objects_t object;
 
 private:
-	static Tmpl8::Surface tiles;
+	static Tmpl8::Surface tiles;	// tilemap
 	static int t_width;				// tilemap width
 	int tile_width, tile_height;	// Can be different from TILE
 

@@ -164,9 +164,8 @@ bool OffroadMap::CheckPos(int x, int y)
 		// Set tile collision box bottom right corner
 		tile_box.max.x = tile->collider.max.x + tile_x + TILE;
 		tile_box.max.y = tile->collider.max.y + tile_y;
-		if (player_box.Collides(tile_box)) return CheckForPowerups(tile);
 	}
-	else if (player_box.Collides(tile_box)) return CheckForPowerups(tile);
+	if (player_box.Collides(tile_box)) return CheckForPowerups(tile);
 
 	return true;
 }

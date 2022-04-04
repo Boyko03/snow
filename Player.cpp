@@ -14,14 +14,12 @@ Player::Player(vec2 pos, int health, float speed) : pos(pos), health(health), sp
 
 void Player::TurnLeft()
 {
-	//x -= speed + 1.0f;
 	speed *= (float)pow(0.999f, elapsedTime);
 	direction = Direction::Left;
 }
 
 void Player::TurnRight()
 {
-	//x += speed + 1.0f;
 	speed *= (float)pow(0.999, elapsedTime);
 	direction = Direction::Right;
 }

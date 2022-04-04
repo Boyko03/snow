@@ -133,7 +133,6 @@ bool NormalMap::CheckPos(int x, int y)
 		// Set tile collision box bottom right corner
 		tile_box.max.x = tile.collider.max.x + tile_x + TILE;
 		tile_box.max.y = tile.collider.max.y + tile_y;
-		return !player_box.Collides(tile_box);
 	}
 	return !player_box.Collides(tile_box);
 }
